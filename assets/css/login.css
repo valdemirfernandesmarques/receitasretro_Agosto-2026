@@ -1,0 +1,221 @@
+/* =========================== */
+/* login.css - Estilo da página de login do site Receitas Retrô */
+/* =========================== */
+
+/*
+* AJUSTE CRÍTICO: Garante que o html e body ocupem 100% da altura da tela
+* e usa Flexbox para empilhar o header, main e footer.
+* IMPORTANTE: Esta regra DEVE estar no seu CSS global (style.css) ou ser a primeira a ser carregada.
+* Se já estiver em style.css, esta repetição aqui pode ser desnecessária, mas é segura.
+*/
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace; /* Fonte padrão para o corpo, como no login-box */
+    background-color: var(--fundo-claro, #fffaf0); /* Cor de fundo clara e retrô */
+    color: #4a2f1c; /* Cor de texto padrão */
+    display: flex;
+    flex-direction: column; /* Organiza header, main, footer em coluna */
+}
+
+/*
+* CONTAINER PRINCIPAL DO LOGIN
+* Usando 'flex: 1;' para que este contêiner cresça e ocupe todo o espaço
+* disponível entre o cabeçalho e o rodapé.
+*/
+.login-container {
+    flex: 1; /* Faz o contêiner crescer e preencher o espaço restante. */
+    display: flex; /* Habilita o uso de Flexbox para alinhamento do formulário dentro dele. */
+    justify-content: center; /* Centraliza o formulário horizontalmente. */
+    align-items: center; /* Centraliza o formulário verticalmente dentro do espaço disponível. */
+    padding: 20px; /* Adiciona um padding geral para não encostar nas bordas da tela. */
+    box-sizing: border-box; /* Inclui padding no cálculo do tamanho total. */
+}
+
+/*
+* CAIXA DE LOGIN (FORMULÁRIO PRINCIPAL)
+* AJUSTADO: Aumentada a largura máxima e o padding interno.
+*/
+.login-box {
+    background-color: #fff; /* Fundo branco para um bom contraste. */
+    padding: 3rem; /* <--- AJUSTE AQUI: Padding interno aumentado para mais espaço. */
+    border: 2px solid #c7a17a; /* Borda com a cor marrom claro, no estilo retrô. */
+    border-radius: 10px; /* Cantos arredondados para um visual mais suave. */
+    width: 90%; /* A caixa ocupa 90% da largura disponível no contêiner... */
+    max-width: 450px; /* <--- AJUSTE AQUI: Largura máxima aumentada para uma caixa maior. */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada para um destaque elegante. */
+    font-family: 'Courier New', Courier, monospace; /* Fonte com estilo retrô. */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total. */
+    
+    margin-top: 30px; /* Margem superior para baixar a caixa. Ajuste se necessário. */
+    margin-bottom: 0; /* Mantido em 0 para centralização vertical. */
+    text-align: center; /* Centraliza o conteúdo textual dentro da caixa, como parágrafos. */
+}
+
+/*
+* TÍTULO DO FORMULÁRIO (Ex: "Login" ou "Bem-vindo")
+* Estilo para o cabeçalho dentro da caixa de login.
+*/
+.login-box h2 {
+    text-align: center; /* Centraliza o texto do título. */
+    color: #6b4c3b; /* Cor marrom/retrô para o título. */
+    font-size: 2.2rem; /* Levemente ajustado para o novo tamanho da caixa. */
+    margin-bottom: 2rem; /* Espaçamento abaixo do título para separar dos campos. */
+}
+
+/*
+* ESTILIZAÇÃO DOS RÓTULOS (Ex: "Usuário", "Senha")
+* Estilo para as legendas dos campos de entrada.
+*/
+.login-box label {
+    display: block; /* Cada rótulo ocupa sua própria linha. */
+    margin-top: 1rem; /* Espaço acima de cada rótulo, separando-os. */
+    color: #333; /* Cor escura para boa legibilidade. */
+    font-weight: bold; /* Texto em negrito. */
+    font-size: 1rem; /* Ligeiramente maior para melhor leitura. */
+}
+
+/*
+* ESTILIZAÇÃO DOS CAMPOS DE ENTRADA (Texto e Senha)
+* Estilo para os inputs onde o usuário digita as informações.
+*/
+.login-box input {
+    width: 100%; /* Ocupa toda a largura disponível da caixa. */
+    padding: 12px; /* Aumentado para um toque mais confortável e visualmente maior. */
+    margin-top: 0.5rem; /* Pequeno espaço acima do input, separando da label. */
+    border: 1px solid #aaa; /* Borda cinza suave. */
+    border-radius: 5px; /* Cantos arredondados. */
+    font-size: 1.1rem; /* Aumentado para melhor digitação e leitura. */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total. */
+}
+
+/*
+* ESTILIZAÇÃO DO BOTÃO DE LOGIN
+* Estilo para o botão de "Entrar" ou "Login".
+*/
+.login-box button {
+    width: 100%; /* Ocupa toda a largura da caixa. */
+    padding: 16px; /* Altura do botão aumentada para melhor usabilidade e destaque. */
+    margin-top: 2rem; /* Espaçamento acima do botão, separando-o dos campos. */
+    background-color: #c7a17a; /* Cor de fundo retrô. */
+    border: none; /* Sem borda. */
+    color: white; /* Texto branco. */
+    font-weight: bold; /* Texto em negrito. */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável. */
+    border-radius: 5px; /* Cantos arredondados. */
+    font-size: 1.15rem; /* Tamanho da fonte do botão ligeiramente maior para destaque. */
+    transition: background-color 0.3s ease; /* Transição suave para o efeito hover. */
+}
+
+/* Efeito ao passar o mouse sobre o botão */
+.login-box button:hover {
+    background-color: #a57b53; /* Tom mais escuro da cor retrô no hover. */
+}
+
+/*
+* ESTILIZAÇÃO DOS LINKS AUXILIARES (Ex: "Esqueci minha senha")
+* AJUSTADO: Tamanho da fonte aumentado.
+*/
+.login-box p {
+    margin-top: 1.5rem; /* Mais espaço acima do parágrafo para separar do botão. */
+    font-size: 1.05rem; /* Tamanho para ser visível e fácil de ler. */
+    color: #555; /* Cor cinza para legibilidade. */
+}
+
+.login-box p a {
+    display: block; /* Cada link ocupa sua própria linha. */
+    text-align: center; /* Centraliza o texto do link. */
+    margin-top: 1rem; /* Espaço acima do link. */
+    color: #6b4c3b; /* Cor retrô para o link. */
+    text-decoration: none; /* Remove o sublinhado padrão. */
+    font-size: 1rem; /* <--- AJUSTE AQUI: Tamanho da fonte do link aumentado para melhor visibilidade. */
+    transition: color 0.3s ease; /* Transição suave para o efeito hover. */
+    font-weight: bold; /* Mantido negrito para o link ter mais destaque. */
+}
+
+/* Efeito ao passar o mouse sobre o link */
+.login-box p a:hover {
+    color: #a57b53; /* Muda a cor do link no hover. */
+    text-decoration: underline; /* Adiciona sublinhado no hover para indicar interatividade. */
+}
+
+/* =========================== */
+/* RESPONSIVIDADE ADAPTATIVA   */
+/* =========================== */
+
+/*
+* MEDIA QUERY PARA TELAS PEQUENAS (Smartphones na maioria)
+* Ajusta o layout para dispositivos com largura de tela de até 500px.
+* A caixa de login se adapta, mas mantém a usabilidade e legibilidade.
+*/
+@media (max-width: 500px) {
+    .login-container {
+        padding: 10px; /* Reduz o padding do container principal para mobile. */
+    }
+
+    .login-box {
+        padding: 2rem; /* <--- AJUSTE MOBILE: Reduz o padding para telas menores, mas ainda generoso. */
+        max-width: 90%; /* Permite que a caixa ocupe mais largura em telas pequenas. */
+        margin-top: 20px; /* Margem superior para baixar no mobile. */
+        margin-bottom: 0; /* Mantido em 0. */
+    }
+
+    .login-box h2 {
+        font-size: 1.8rem; /* Reduz um pouco o tamanho do título para caber melhor. */
+        margin-bottom: 1.5rem; /* Ajuste do espaçamento. */
+    }
+
+    .login-box label {
+        font-size: 0.95rem; /* Leve redução no tamanho da fonte dos rótulos. */
+    }
+
+    .login-box input,
+    .login-box button {
+        font-size: 1rem; /* Fonte ligeiramente menor para campos e botões em mobile. */
+        padding: 10px; /* Reduz um pouco o padding dos campos e botões, mas ainda confortável. */
+    }
+
+    .login-box button {
+        margin-top: 1.5rem; /* Ajuste do espaçamento. */
+    }
+
+    .login-box p a {
+        font-size: 0.9rem; /* <--- AJUSTE MOBILE: Reduz o tamanho da fonte do link para telas menores. */
+    }
+}
+
+/*
+* MEDIA QUERY PARA TELAS MUITO PEQUENAS (Smartphones compactos ou landscape)
+* Ajustes para dispositivos com largura de tela de até 360px.
+* Garante que a interface continue usável e legível em dispositivos mais compactos.
+*/
+@media (max-width: 360px) {
+    .login-container {
+        padding: 5px; /* Reduz ainda mais o padding do container principal para telas muito pequenas. */
+    }
+    .login-box {
+        padding: 1.5rem; /* <--- AJUSTE MOBILE PEQUENO: Reduz o padding um pouco mais. */
+        margin-top: 15px; /* Margem superior para baixar. */
+        margin-bottom: 0; /* Mantido em 0. */
+    }
+
+    .login-box h2 {
+        font-size: 1.6rem; /* Título um pouco menor. */
+    }
+
+    .login-box label,
+    .login-box input,
+    .login-box button {
+        font-size: 0.9rem; /* Fontes levemente menores para caber melhor. */
+    }
+
+    .login-box input,
+    .login-box button {
+        padding: 8px; /* Padding um pouco menor para campos e botões. */
+    }
+
+    .login-box p a {
+        font-size: 0.85rem; /* <--- AJUSTE MOBILE PEQUENO: Reduz um pouco mais a fonte do link. */
+    }
+}

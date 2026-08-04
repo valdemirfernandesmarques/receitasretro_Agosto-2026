@@ -1,0 +1,163 @@
+/* =============================================
+   FOOTER - Rodapé do site Receitas Retrô
+   ---------------------------------------------
+   Comentado, responsivo e organizado
+   ============================================= */
+
+/* ===== Estilo base do rodapé ===== */
+#alinha-rodape {
+    background-color: #f5e6cc;
+    color: #8b4513;
+    text-align: center;
+    padding: 20px 10px; /* Padding padrão para telas maiores */
+    font-family: 'Georgia', serif;
+    border-top: 2px solid #d2b48c;
+    margin-top: 50px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    /* Adicionar para garantir que o layout Flexbox seja respeitado */
+    -webkit-box-sizing: border-box; /* Para compatibilidade com Webkit (Safari, Chrome antigos) */
+    -moz-box-sizing: border-box;    /* Para compatibilidade com Mozilla (Firefox antigos) */
+    box-sizing: border-box;         /* Padrão */
+}
+
+/* ===== Menu de navegação no rodapé ===== */
+.menu-rodape ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 15px 0; /* Margem abaixo da lista de links */
+    display: -webkit-box;    /* Para compatibilidade com Webkit (Safari, Chrome antigos) */
+    display: -webkit-flex;   /* Para compatibilidade com Webkit */
+    display: -moz-box;       /* Para compatibilidade com Mozilla */
+    display: -ms-flexbox;    /* Para compatibilidade com IE10+ */
+    display: flex;           /* Padrão */
+    -webkit-box-pack: center; /* Para compatibilidade com Webkit */
+    -webkit-justify-content: center; /* Para compatibilidade com Webkit */
+    -ms-flex-pack: center;    /* Para compatibilidade com IE10+ */
+    justify-content: center; /* Centraliza os links horizontalmente */
+    gap: 20px; /* Espaçamento entre os links (OBS: 'gap' pode precisar de fallback para navegadores muito antigos, mas Edge moderno suporta) */
+    flex-wrap: wrap; /* Permite que os links quebrem linha se não houver espaço */
+}
+
+.menu-rodape li a {
+    text-decoration: none;
+    color: #8b4513;
+    font-weight: bold;
+    font-size: 14px; /* Tamanho da fonte padrão para links do footer */
+    transition: color 0.3s;
+    white-space: nowrap; /* Garante que o texto do link não quebre a linha */
+}
+
+.menu-rodape li a:hover {
+    color: #a0522d;
+}
+
+/* ===== Ícones de redes sociais ===== */
+.social-icons {
+    margin-bottom: 15px; /* Margem abaixo dos ícones */
+    display: -webkit-box;    /* Para compatibilidade com Webkit */
+    display: -webkit-flex;   /* Para compatibilidade com Webkit */
+    display: -moz-box;       /* Para compatibilidade com Mozilla */
+    display: -ms-flexbox;    /* Para compatibilidade com IE10+ */
+    display: flex;           /* Padrão */
+    -webkit-box-pack: center; /* Para compatibilidade com Webkit */
+    -webkit-justify-content: center; /* Para compatibilidade com Webkit */
+    -ms-flex-pack: center;    /* Para compatibilidade com IE10+ */
+    justify-content: center; /* Centraliza os ícones */
+    gap: 15px; /* Espaçamento entre os ícones */
+    flex-wrap: wrap; /* Permite que os ícones quebrem linha */
+}
+
+.social-link .icon {
+    width: 28px; /* Tamanho padrão dos ícones */
+    height: 28px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.social-link:hover .icon {
+    transform: scale(1.1);
+}
+
+/* ===== Textos finais do rodapé ===== */
+#alinha-rodape p {
+    margin: 5px 0; /* Margem entre os parágrafos de texto */
+    font-size: 14px; /* Tamanho da fonte padrão para textos do footer */
+}
+
+/* ===== Responsividade para dispositivos móveis ===== */
+@media (max-width: 600px) {
+    #alinha-rodape {
+        padding: 15px 5px;
+        margin-top: 30px;
+    }
+
+    .menu-rodape ul {
+        /* Para navegadores mais antigos, pode ser necessário especificar a direção para 'row' com prefixos */
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .menu-rodape li a {
+        font-size: 11px;
+        padding: 1px 0;
+    }
+
+    .social-icons {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .social-link .icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    #alinha-rodape p {
+        font-size: 12px;
+        margin: 3px 0;
+    }
+}
+
+/* Media query para telas menores ainda, se necessário */
+@media (max-width: 380px) {
+    #alinha-rodape {
+        padding: 10px 5px;
+    }
+
+    .menu-rodape ul {
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: row;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        gap: 3px;
+        margin-bottom: 8px;
+    }
+
+    .menu-rodape li a {
+        font-size: 10px;
+        padding: 0px 0;
+    }
+
+    .social-icons {
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+
+    .social-link .icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    #alinha-rodape p {
+        font-size: 11px;
+        margin: 2px 0;
+    }
+}

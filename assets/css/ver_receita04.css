@@ -1,0 +1,127 @@
+/* ---------------------------
+   ESTILO GERAL DA PÁGINA
+--------------------------- */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff8f0; /* tom de fundo retrô */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container principal que centraliza o conteúdo */
+.container {
+    max-width: 800px;              /* largura máxima em telas grandes */
+    margin: 2rem auto;             /* centraliza o conteúdo horizontalmente */
+    padding: 1rem;
+    box-sizing: border-box;
+    text-align: center;            /* CENTRALIZA TODOS ELEMENTOS DE TEXTO DENTRO DO CONTAINER */
+}
+
+/* ---------------------------
+   IMAGEM DA RECEITA
+--------------------------- */
+
+.receita-imagem {
+    margin-bottom: 20px;
+}
+
+.receita-imagem img {
+    width: 100%;                   /* imagem ocupa toda a largura disponível do container */
+    max-width: 600px;              /* limita o tamanho máximo */
+    border-radius: 10px;           /* bordas arredondadas */
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); /* sombra suave */
+    transition: transform 0.3s ease;
+    display: block;                /* para centralizar corretamente */
+    margin: 0 auto;                /* CENTRALIZA A IMAGEM */
+}
+
+/* Efeito de zoom ao passar o mouse na imagem */
+.receita-imagem img:hover {
+    transform: scale(1.02);        /* aumenta levemente a imagem */
+}
+
+
+/* ---------------------------
+   TÍTULO DA RECEITA
+--------------------------- */
+
+.receita-titulo {
+    font-size: 2rem;               /* tamanho do título */
+    color: #5a2a00;                /* cor marrom retrô */
+    margin-bottom: 20px;
+    text-align: center;            /* CENTRALIZA O TÍTULO */
+}
+
+
+/* ---------------------------
+   SEÇÃO DE INGREDIENTES E MODO DE PREPARO
+--------------------------- */
+
+.receita {
+    text-align: center;            /* CENTRALIZA TODAS AS SEÇÕES DENTRO */
+}
+
+/* Subtítulos: Ingredientes, Modo de Preparo */
+.receita h2 {
+    color: #7b3f00;                /* cor dos subtítulos */
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    text-align: center;            /* CENTRALIZA OS <h2> */
+}
+
+/* Área de texto com ingredientes ou preparo */
+.receita textarea {
+    width: 70%;                    /* largura com margem para centralização */
+    padding: 8px 12px;             /* padding ajustado para melhor aproveitamento interno */
+    font-size: 1rem;
+    border-radius: 5px;
+    resize: none;                  /* impede redimensionamento */
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin: 0 auto 30px auto;      /* CENTRALIZA O TEXTAREA E ADICIONA ESPAÇO INFERIOR */
+    display: block;                /* necessário para margin: auto funcionar */
+    background-color: #fffaf5;     /* fundo claro suave */
+    color: #333;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    text-align: left;              /* alinhamento interno do texto (pode mudar para center se quiser) */
+    line-height: 1.5;              /* melhora a leitura */
+}
+
+/* Efeito ao passar o mouse */
+.receita textarea:hover {
+    box-shadow: 0 0 5px rgba(123, 63, 0, 0.3); /* sombra leve */
+    transform: scale(1.01);                   /* leve aumento */
+}
+
+
+/* ---------------------------
+   RESPONSIVIDADE PARA CELULARES
+--------------------------- */
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 1rem 0.5rem;      /* padding lateral menor */
+    }
+
+    .receita-titulo {
+        font-size: 1.5rem;         /* título menor em telas pequenas */
+    }
+
+    .receita h2 {
+        font-size: 1.2rem;         /* subtítulos menores */
+    }
+
+    .receita-imagem img {
+        max-width: 100%;           /* imagem totalmente adaptada à tela */
+    }
+
+    .receita textarea {
+        width: 95%;                /* textarea mais largo em celulares */
+        font-size: 0.95rem;        /* texto um pouco menor */
+    }
+}
+
+/* FIM DO CSS */

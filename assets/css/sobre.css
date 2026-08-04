@@ -1,0 +1,124 @@
+/* ================================
+   CSS - Página sobre.php
+   Projeto: Receitas Retrô
+   ================================ */
+
+/* Garante que a página ocupe 100% da altura da tela */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Georgia', serif;
+    background-color: #fffaf0; /* Cor de fundo suave retrô */
+    color: #4a2f1c;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Remove marcadores de lista em menus e rodapés globais */
+/* ATENÇÃO: Essas regras podem afetar outros menus. Se este CSS é exclusivo da página sobre,
+   mantenha. Caso contrário, reavalie o escopo. */
+header ul,
+header li,
+footer ul,
+footer li {
+    list-style: none; /* Remove os bullets */
+    margin: 0;
+    padding: 0;
+   /* display: inline-block; /* Garante itens lado a lado se for menu horizontal */
+}
+
+/* Conteúdo principal centralizado */
+main.container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px; /* Padding padrão para telas maiores */
+}
+
+/* Seção sobre */
+section.sobre {
+    max-width: 800px;
+    background-color: #fdf5e6;
+    padding: 30px; /* Padding padrão para telas maiores */
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(190, 160, 120, 0.3);
+    line-height: 1.6; /* Espaçamento entre linhas para melhor leitura */
+}
+
+/* Títulos da seção sobre */
+.sobre h2, .sobre h3 {
+    color: #7d3f00;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+/* Lista de pessoas envolvidas dentro da seção sobre
+   (mantém bullets, pois é conteúdo textual) */
+.sobre ul {
+    list-style-type: square; /* Mantém os marcadores de lista quadrados */
+    padding-left: 20px; /* Recuo da lista */
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.sobre li {
+    margin-bottom: 8px; /* Espaçamento entre itens da lista */
+}
+
+/* Rodapé sempre ao final da tela 
+footer.footer-site {
+    background-color: #7d3f00;
+    color: #fffaf0;
+    text-align: center;
+    padding: 15px;
+    font-size: 0.9em;
+}
+
+/* Estilização adicional para links do rodapé 
+footer.footer-site a {
+    color: #fffaf0;
+    text-decoration: none;
+    margin: 0 8px;
+}
+
+footer.footer-site a:hover {
+    text-decoration: underline;
+}*/
+
+/* ================================
+   Responsividade
+   ================================ 
+@media (max-width: 600px) {
+    main.container {
+        padding: 10px 5px; /* **AJUSTADO:** Padding do container principal para caber mais 
+    }
+
+   /* section.sobre {
+        padding: 12px; /* **AJUSTADO:** Reduz o padding interno da seção sobre 
+        margin: 12px 5px; /* **AJUSTADO:** Reduz a margem externa da seção sobre 
+    }
+
+    /*.sobre h2, .sobre h3 {
+        font-size: 1.2em; /* **AJUSTADO:** Diminui um pouco mais a fonte dos títulos 
+        text-align: center;
+        margin-bottom: 8px; /* **AJUSTADO:** Reduz a margem inferior dos títulos 
+    }
+
+    .sobre p, .sobre li {
+        font-size: 0.85em; /* **AJUSTADO:** Diminui ainda mais o tamanho da fonte do texto do corpo 
+        text-align: justify;
+        line-height: 1.4; /* **AJUSTADO:** Ajusta o line-height para maior compressão vertical 
+        margin-bottom: 0.5em; /* **AJUSTADO:** Adiciona um pequeno espaçamento entre parágrafos 
+    }
+    .sobre p:last-of-type {
+        margin-bottom: 0; /* Remove a margem do último parágrafo 
+    }
+
+     Garante melhor quebra no rodapé 
+    footer.footer-site {
+        font-size: 0.78em; /* **AJUSTADO:** Diminui a fonte do rodapé 
+        padding: 6px; /* **AJUSTADO:** Reduz o padding do rodapé 
+    }
+}*/

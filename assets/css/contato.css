@@ -1,0 +1,160 @@
+/* ==========================================================================
+   CSS da Página de Contato - Receitas Retrô
+   Versão: 1.3 (Corrigida)
+   Autor: Seu Nome (ou Gemini)
+   Descrição: Estilos para o formulário de contato, com design retrô e
+              totalmente responsivo para desktops, tablets e celulares.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   [1] ESTILOS GERAIS E CONTAINER PRINCIPAL
+   -------------------------------------------------------------------------- */
+
+.container-contato {
+  max-width: 600px;                      /* Largura máxima do formulário para legibilidade */
+  margin: 40px auto;                     /* Centraliza na página e adiciona espaço vertical */
+  padding: 30px;                         /* Espaçamento interno generoso */
+  background-color: #f7f4f1;             /* Cor de fundo suave com tom retrô */
+  border-radius: 8px;                    /* Cantos arredondados para suavizar o design */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave para dar profundidade */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte legível e moderna */
+}
+
+/* --------------------------------------------------------------------------
+   [2] TIPOGRAFIA (TÍTULOS E TEXTOS)
+   -------------------------------------------------------------------------- */
+
+.titulo-pagina {
+  font-size: 2.2rem;                     /* Tamanho de fonte grande para o título principal */
+  color: #4a2c2a;                         /* Cor marrom escura, remetendo ao retrô */
+  text-align: center;                    /* Centraliza o título */
+  margin-bottom: 10px;                   /* Espaço abaixo do título */
+}
+
+.descricao-pagina {
+  font-size: 1rem;                       /* Tamanho de fonte padrão para o texto descritivo */
+  color: #6b4c4c;                         /* Cor mais clara que o título, para hierarquia */
+  text-align: center;                    /* Centraliza a descrição */
+  margin-bottom: 30px;                   /* Espaço maior abaixo da descrição */
+  line-height: 1.5;                      /* Melhora a legibilidade do parágrafo */
+}
+
+/* --------------------------------------------------------------------------
+   [3] FORMULÁRIO E SEUS ELEMENTOS
+   -------------------------------------------------------------------------- */
+
+.formulario-contato {
+  display: flex;                         /* Habilita o Flexbox para alinhar os campos */
+  flex-direction: column;                /* Alinha os itens em uma coluna */
+  gap: 20px;                             /* Espaçamento entre cada grupo de formulário (label + input) */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;                /* Alinha o rótulo (label) e o campo (input) verticalmente */
+}
+
+.form-group label {
+  margin-bottom: 8px;                    /* Espaço entre o rótulo e o campo de texto */
+  color: #4a2c2a;                         /* Cor consistente com o título */
+  font-weight: bold;                     /* Destaca o nome do campo */
+  font-size: 1rem;
+}
+
+/* Estilo comum para todos os campos de entrada (input e textarea) */
+.form-group input,
+.form-group textarea {
+  width: 100%;                           /* Ocupa 100% da largura do container pai */
+  padding: 12px;                         /* Espaçamento interno para conforto visual */
+  font-size: 1rem;                       /* Tamanho do texto dentro do campo */
+  border: 2px solid #d9b89e;             /* Borda com um tom retrô suave */
+  border-radius: 5px;                    /* Cantos arredondados nos campos */
+  background-color: #fffaf7;             /* Fundo muito claro para os campos */
+  box-sizing: border-box;                /* Garante que padding não afete a largura total */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Animação suave ao focar */
+}
+
+/* Efeito de foco para os campos, indicando interatividade */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;                         /* Remove a borda de foco padrão do navegador */
+  border-color: #a3695a;                 /* Cor da borda mais escura ao focar */
+  box-shadow: 0 0 5px rgba(163, 105, 90, 0.3); /* Adiciona um brilho sutil */
+}
+
+/*
+ * =======================================================
+ * A CORREÇÃO FOI FEITA AQUI
+ * =======================================================
+*/
+/* Estilo específico para o <textarea> */
+.form-group textarea {
+  min-height: 150px;                     /* Altura mínima para o campo de mensagem */
+  resize: none;                          /* IMPEDE que o usuário redimensione o campo */
+  line-height: 1.6;                      /* Espaçamento entre linhas para melhor leitura do texto digitado */
+}
+
+/* --------------------------------------------------------------------------
+   [4] BOTÃO DE ENVIO
+   -------------------------------------------------------------------------- */
+
+.botao-enviar {
+  padding: 12px 20px;                    /* Espaçamento interno do botão */
+  font-size: 1.1rem;                     /* Tamanho da fonte do texto do botão */
+  font-weight: bold;                     /* Texto em negrito */
+  color: #fff;                           /* Cor do texto branca */
+  background-color: #6b4c3b;             /* Cor de fundo marrom escura */
+  border: none;                          /* Sem borda */
+  border-radius: 6px;                    /* Cantos arredondados */
+  cursor: pointer;                       /* Cursor de mão para indicar que é clicável */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Animação suave */
+  align-self: center;                    /* Centraliza o botão dentro do formulário flex */
+  width: 50%;                            /* Largura do botão */
+  max-width: 200px;                      /* Largura máxima para não ficar muito grande */
+}
+
+/* Efeito ao passar o mouse sobre o botão */
+.botao-enviar:hover {
+  background-color: #7a4e43;             /* Tom mais claro ao passar o mouse */
+  transform: translateY(-2px);           /* Leve elevação para dar feedback */
+}
+
+
+/* --------------------------------------------------------------------------
+   [5] RESPONSIVIDADE (TABLETS E CELULARES)
+   -------------------------------------------------------------------------- */
+
+/* Estilos para Tablets (telas até 768px de largura) */
+@media (max-width: 768px) {
+  .container-contato {
+    margin: 30px auto;
+    padding: 25px;
+  }
+
+  .titulo-pagina {
+    font-size: 2rem;
+  }
+}
+
+/* Estilos para Celulares (telas até 600px de largura) */
+@media (max-width: 600px) {
+  .container-contato {
+    margin: 20px 15px;                   /* Margem menor nas laterais para aproveitar a tela */
+    padding: 20px;                       /* Espaço interno reduzido */
+  }
+
+  .titulo-pagina {
+    font-size: 1.8rem;                   /* Tamanho de título ajustado para telas pequenas */
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 10px;                       /* Padding menor para os campos */
+  }
+
+  .botao-enviar {
+    font-size: 1rem;                     /* Fonte do botão um pouco menor */
+    width: 100%;                         /* Botão ocupa toda a largura para fácil clique */
+    max-width: none;                     /* Remove a largura máxima em telas pequenas */
+  }
+}

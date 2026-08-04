@@ -1,0 +1,184 @@
+/* =============================
+    Estilos da Página Categoria
+    ============================= */
+
+/* Container principal da página de categorias */
+.pagina-categoria {
+    padding: 30px 20px;
+    background-color: #fffaf4;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box; /* Adicionado para consistência de box model */
+}
+
+/* Título da categoria */
+.titulo-categoria {
+    font-size: 2rem;
+    color: #8B4513; /* Marrom retrô */
+    margin-bottom: 20px;
+    text-align: center;
+    font-family: 'Georgia', serif;
+}
+
+/* Grid responsivo para os cards de receitas */
+.grid-receitas {
+    display: grid;
+    /* Ajustado minmax para dar mais controle em telas maiores */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    justify-content: center; /* Centraliza os itens no grid */
+}
+
+/* Card de cada receita */
+.card-receita {
+    background-color: #fffaf1;
+    border: 2px solid #d9c2a3;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    display: flex; /* Adicionado para melhor controle do layout interno */
+    flex-direction: column; /* Organiza os itens em coluna */
+    box-sizing: border-box; /* Adicionado */
+}
+
+/* Título da receita */
+.receita-titulo {
+    font-size: 1.3rem;
+    color: #4b2e2e;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center; /* Centraliza o título */
+}
+
+/* Parágrafo com autor e data */
+.autor-receita {
+    font-size: 0.9rem;
+    color: #6d4c41;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    text-align: center; /* Centraliza o texto */
+}
+
+/* Imagem da receita */
+.card-receita img {
+    width: 100%;
+    /* Removido max-height aqui para controlar melhor no media query ou para deixar a imagem mais fluida */
+    /* object-fit: cover; já está bom */
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 10px 0;
+    border: 1px solid #e3d1c5;
+    height: auto;
+    /* Adicionado max-width para desktop, pode ajustar o valor conforme necessário */
+    max-width: 400px; /* Limite a largura da imagem para desktop */
+    display: block; /* Garante que a imagem se comporte como um bloco */
+    margin-left: auto; /* Centraliza a imagem */
+    margin-right: auto; /* Centraliza a imagem */
+}
+
+/* Conteúdo com ingredientes e preparo */
+.receita-conteudo {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1; /* Permite que o conteúdo ocupe o espaço restante */
+}
+
+/* Bloco de ingredientes ou preparo */
+.receita-bloco {
+    background-color: #fff6ea;
+    border: 1px solid #e5cdb6;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+/* Títulos dos blocos (Ingredientes, Modo de Preparo) */
+.receita-bloco h4 {
+    font-size: 1.1rem;
+    color: #7b4b3a;
+    margin-bottom: 8px;
+}
+
+/* Lista de ingredientes */
+.lista-ingredientes {
+    list-style: disc inside;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Lista do modo de preparo */
+.lista-preparo {
+    list-style: decimal inside;
+    padding-left: 0;
+    margin: 0;
+}
+
+/* Botão/link para voltar à página inicial */
+.card-receita .btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 16px;
+    background-color: #a0522d;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    text-align: center;
+    align-self: center; /* Centraliza o botão no card flex */
+}
+
+.card-receita .btn:hover {
+    background-color: #8b4513;
+}
+
+/* ================
+    Responsividade
+    ================ */
+@media (max-width: 768px) {
+    .pagina-categoria {
+        padding: 20px 15px;
+    }
+
+    .titulo-categoria {
+        font-size: 1.6rem;
+    }
+
+    .grid-receitas {
+        /* Permite que o grid use 1 coluna em telas muito pequenas */
+        grid-template-columns: 1fr;
+    }
+
+    .receita-conteudo {
+        flex-direction: column;
+    }
+
+    .receita-bloco h4 {
+        font-size: 1rem;
+    }
+
+    .card-receita img {
+        max-height: 200px; /* Ajusta imagem em telas menores */
+        max-width: 100%; /* Garante que a imagem ocupe 100% da largura disponível no mobile */
+        margin-left: 0; /* Remove a centralização para mobile, se a imagem for 100% */
+        margin-right: 0;
+    }
+
+    .card-receita .btn {
+        width: 100%;
+        padding: 10px;
+    }
+}
+
+/* Opcional: Media query para telas um pouco maiores que mobile, mas menores que desktop completo */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .grid-receitas {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+
+    .card-receita img {
+        max-width: 500px; /* Um pouco maior que mobile, mas ainda limitada */
+    }
+}

@@ -1,0 +1,178 @@
+/* =====================================================
+   INDEX.CSS - Página Principal do Receitas Retrô
+   -----------------------------------------------------
+   • CSS exclusivo da página index.php
+   • Totalmente comentado para fácil manutenção
+   • Responsivo para desktop, tablet e celular
+   • Rodapé sempre no final da tela (mesmo com pouco conteúdo)
+   • Preparado para futura troca do fundo da página
+   ===================================================== */
+
+/* Reset geral para margens, preenchimentos e box-sizing */
+* {
+  margin: 0;                /* Remove margens padrão */
+  padding: 0;               /* Remove preenchimentos padrão */
+  box-sizing: border-box;   /* Inclui padding e border na largura e altura */
+}
+
+/* === Estilo geral da página index === */
+.index {
+  min-height: 100vh;         /* Altura mínima igual à altura da viewport */
+  font-family: 'Arial', sans-serif; /* Fonte padrão para o conteúdo */
+
+  /* Fundo com imagem */
+  background-image: url('/assets/img/plano-de-fundo2.jpeg'); /* Caminho da imagem de fundo */
+  background-size: cover;              /* Faz a imagem cobrir toda a área */
+  background-repeat: no-repeat;        /* Evita repetição da imagem */
+  background-position: center center; /* Centraliza a imagem no fundo */
+  background-attachment: scroll;       /* Imagem rola junto com o conteúdo */
+}
+
+/* === Wrapper principal para empurrar o footer para baixo === */
+.index .wrapper {
+  display: flex;             /* Usa flexbox para layout flexível */
+  flex-direction: column;    /* Organiza filhos em coluna */
+  min-height: 100vh;         /* Ocupa pelo menos a altura total da tela */
+}
+
+/* === Área principal de conteúdo (main) === */
+.index main {
+  flex: 1;                  /* Faz o main ocupar todo espaço disponível */
+  padding: 30px 20px;       /* Espaçamento interno */
+  max-width: 1200px;        /* Largura máxima para facilitar leitura */
+  margin: 0 auto;           /* Centraliza horizontalmente */
+}
+
+/* === Seção Hero (mensagem de boas-vindas) === */
+.index .hero {
+  background-color: #fff8ec;              /* Fundo claro para destaque */
+  text-align: center;                     /* Centraliza texto */
+  padding: 1px 5px;                       /* Espaçamento interno pequeno */
+  border-radius: 12px;                    /* Bordas arredondadas suaves */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Sombra leve para destaque */
+  margin-bottom: 30px;                    /* Espaço abaixo da seção */
+}
+
+/* === Título principal dentro do Hero === */
+.index .titulo {
+  font-size: 1.5rem;          /* Tamanho da fonte */
+  color: #8b4513;             /* Cor marrom */
+  margin-bottom: 10px;        /* Espaço abaixo do título */
+}
+
+/* === Descrição do site dentro do Hero === */
+.index .descricao {
+  font-size: 1.2rem;          /* Tamanho da fonte */
+  color: #5c4033;             /* Cor marrom escura */
+  margin-bottom: 20px;        /* Espaço abaixo da descrição */
+}
+
+/* === Botão principal "Explorar Receitas" dentro do Hero === */
+.index .btn {
+  background-color: #d2b48c;  /* Cor de fundo do botão */
+  color: #fff;                /* Cor do texto */
+  padding: 12px 24px;         /* Espaçamento interno */
+  text-decoration: none;      /* Remove sublinhado do link */
+  border-radius: 8px;         /* Bordas arredondadas */
+  font-weight: bold;          /* Texto em negrito */
+  transition: background-color 0.3s ease; /* Transição suave para hover */
+}
+
+/* === Estado hover do botão principal === */
+.index .btn:hover {
+  background-color: #c49b6d; /* Cor alterada ao passar o mouse */
+}
+
+/* === Seção de receitas em destaque === */
+.index .destaques {
+  margin-top: 30px;           /* Espaço acima da seção */
+}
+
+/* === Título da seção de destaques === */
+.index .destaques h2 {
+  text-align: center;         /* Centraliza título */
+  color: #8b4513;             /* Cor marrom do título */
+  margin-bottom: 15px;        /* Espaço abaixo do título */
+  font-size: 2rem;            /* Tamanho maior da fonte */
+}
+
+/* === Grade flexível para os cards das receitas === */
+.index .cards {
+  display: flex;              /* Usa flexbox para layout responsivo */
+  flex-wrap: wrap;            /* Permite quebra de linha */
+  gap: 20px;                  /* Espaçamento entre os cards */
+  justify-content: center;    /* Centraliza os cards horizontalmente */
+}
+
+/* === Estilo individual para cada card de receita === */
+.index .card {
+  background-color: #fffaf0;  /* Fundo claro */
+  border-radius: 12px;        /* Bordas arredondadas */
+  padding: 20px;              /* Espaçamento interno */
+  width: 300px;               /* Largura fixa para desktop */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* Sombra leve para destaque */
+  text-align: center;         /* Centraliza o conteúdo dentro do card */
+}
+
+/* === Imagem dentro do card === */
+.index .card img {
+  width: 100%;               /* Imagem ocupa toda largura do card */
+  height: 180px;             /* Altura fixa */
+  object-fit: cover;         /* Corta e ajusta a imagem para cobrir o espaço */
+  border-radius: 8px;        /* Bordas arredondadas da imagem */
+  margin-bottom: 10px;       /* Espaço abaixo da imagem */
+}
+
+/* === Título do card === */
+.index .card h3 {
+  font-size: 1.3rem;         /* Tamanho da fonte do título */
+  color: #5c4033;            /* Cor do texto (marrom escuro) */
+  margin-bottom: 8px;        /* Espaço abaixo do título */
+}
+
+/* === Descrição do card === */
+.index .card p {
+  font-size: 0.95rem;        /* Tamanho da fonte */
+  color: #6f4e37;            /* Cor do texto */
+  margin-bottom: 10px;       /* Espaço abaixo do parágrafo */
+}
+
+/* === Botão pequeno dentro do card (ex: "Ver Receita") === */
+.index .btn-pequeno {
+  background-color: #deb887; /* Cor do botão */
+  color: white;              /* Cor do texto */
+  padding: 8px 16px;         /* Espaçamento interno */
+  border-radius: 6px;        /* Bordas arredondadas */
+  text-decoration: none;     /* Remove sublinhado */
+  font-size: 0.9rem;         /* Tamanho da fonte */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+
+/* === Estado hover do botão pequeno === */
+.index .btn-pequeno:hover {
+  background-color: #cfa773; /* Cor alterada ao passar o mouse */
+}
+
+/* === Responsividade para tablets e celulares === */
+@media (max-width: 768px) {
+  /* Cards passam a ficar em coluna para melhor leitura em telas menores */
+  .index .cards {
+    flex-direction: column;
+    align-items: center;    /* Centraliza cards na coluna */
+  }
+
+  /* Título principal fica maior para facilitar leitura */
+  .index .titulo {
+    font-size: 2rem;
+  }
+
+  /* Descrição diminui um pouco para caber melhor */
+  .index .descricao {
+    font-size: 1rem;
+  }
+
+  /* Cards ocupam 90% da largura da tela */
+  .index .card {
+    width: 90%;
+  }
+}

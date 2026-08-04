@@ -1,0 +1,278 @@
+/* =======================================================
+   Arquivo CSS: ver_receita_pendente.css
+   Descrição: Estilos específicos para a página de visualização de receitas pendentes (admin).
+   Autor: [Seu Nome ou Nome da Empresa]
+   Data: 26 de junho de 2025
+   ======================================================= */
+
+/* -------------------------------------------------------
+   1. Estilos Globais e Layout Principal
+   ------------------------------------------------------- */
+
+/*
+   Define um layout Flexbox para o corpo da página (body).
+   Isso permite que o conteúdo principal (main/div) cresça para preencher o espaço
+   e empurre o rodapé para a parte inferior da tela, mesmo com pouco conteúdo.
+   Se o seu 'header' já estiver no topo e 'footer' no final,
+   certifique-se de que o elemento que envolve o conteúdo principal (por exemplo, main ou div.container-principal)
+   seja o que tem 'flex-grow: 1;'.
+*/
+body.pagina-ver-receita-admin {
+    display: flex; /* Habilita o Flexbox */
+    flex-direction: column; /* Organiza os itens (header, main/conteúdo, footer) em coluna */
+    min-height: 100vh; /* Garante que o body ocupe no mínimo 100% da altura da viewport */
+    margin: 0; /* Remove margens padrão do body */
+    padding: 0; /* Remove preenchimento padrão do body */
+    background-color: #f4f4f4; /* Cor de fundo suave para a página */
+    font-family: Arial, sans-serif; /* Fonte padrão, ajuste conforme seu style.css */
+    color: #333; /* Cor de texto padrão */
+}
+
+/*
+   Ajusta o elemento que envolve o conteúdo principal para que ele possa crescer
+   e ocupar o espaço disponível, empurrando o footer para baixo.
+   Assumindo que o seu header e footer são irmãos diretos do body.
+   Se você tiver um '<main>' ou '<div class="main-content">' que englobe tudo entre header e footer,
+   aplique 'flex-grow: 1;' a ele. No seu caso, parece ser 'div.container-receita-pendente'
+   que deve estar dentro do main, ou ser o próprio conteúdo principal.
+   Vamos aplicar ao seu 'container-receita-pendente' para garantir.
+*/
+.container-receita-pendente {
+    flex-grow: 1; /* Permite que este contêiner cresça e preencha o espaço vertical disponível */
+    max-width: 800px; /* Largura máxima do conteúdo para desktop */
+    margin: 20px auto; /* Centraliza o contêiner horizontalmente e adiciona margem superior/inferior */
+    padding: 25px; /* Espaçamento interno */
+    background-color: #fff; /* Fundo branco para o bloco da receita */
+    border-radius: 8px; /* Cantos arredondados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidade */
+}
+
+/* -------------------------------------------------------
+   2. Estilos de Títulos e Textos
+   ------------------------------------------------------- */
+
+.container-receita-pendente h2 {
+    text-align: center; /* Centraliza o título principal da página */
+    color: #2c3e50; /* Cor mais escura para o título */
+    margin-bottom: 25px; /* Espaço abaixo do título */
+    font-size: 2em; /* Tamanho da fonte, ajuste conforme preferir */
+}
+
+.receita-detalhe p {
+    margin-bottom: 12px; /* Espaço entre parágrafos de detalhes */
+    line-height: 1.6; /* Altura da linha para melhor leitura */
+    font-size: 1.05em; /* Tamanho da fonte ligeiramente maior */
+}
+
+.receita-detalhe p strong {
+    color: #555; /* Cor para o texto em negrito */
+}
+
+.receita-detalhe h4 {
+    margin-top: 30px; /* Espaço antes dos subtítulos (Ingredientes, Modo de Preparo) */
+    margin-bottom: 15px; /* Espaço abaixo dos subtítulos */
+    color: #34495e; /* Cor para os subtítulos */
+    border-bottom: 2px solid #eee; /* Linha de separação */
+    padding-bottom: 8px; /* Espaçamento abaixo do texto e acima da linha */
+    font-size: 1.4em; /* Tamanho da fonte dos subtítulos */
+}
+
+/* -------------------------------------------------------
+   3. Estilos de Listas (Ingredientes e Modo de Preparo)
+   ------------------------------------------------------- */
+
+.receita-detalhe ul,
+.receita-detalhe ol {
+    list-style-position: outside; /* Marcadores/números fora do conteúdo do item */
+    padding-left: 25px; /* Recuo para as listas */
+    margin-bottom: 20px; /* Espaço abaixo das listas */
+}
+
+.receita-detalhe ul li,
+.receita-detalhe ol li {
+    margin-bottom: 8px; /* Espaço entre os itens da lista */
+    font-size: 1em; /* Tamanho da fonte dos itens da lista */
+    line-height: 1.5; /* Altura da linha */
+}
+
+/* Estilo específico para o status 'pendente' */
+.receita-detalhe .status-pendente {
+    color: #e67e22; /* Laranja para status pendente */
+    font-weight: bold;
+}
+
+/* -------------------------------------------------------
+   4. Estilos de Imagem da Receita
+   ------------------------------------------------------- */
+
+.receita-detalhe img {
+    max-width: 100%; /* Garante que a imagem não ultrapasse a largura do contêiner */
+    height: auto; /* Mantém a proporção da imagem */
+    display: block; /* Remove espaço extra abaixo da imagem */
+    margin: 25px auto; /* Centraliza a imagem e adiciona margem */
+    border-radius: 5px; /* Cantos levemente arredondados para a imagem */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil para a imagem */
+}
+
+/* -------------------------------------------------------
+   5. Estilos para as Ações do Administrador
+   ------------------------------------------------------- */
+
+.acoes-admin {
+    text-align: center; /* Centraliza os botões de ação */
+    margin-top: 30px; /* Espaço acima dos botões */
+    padding-top: 20px; /* Espaçamento interno superior */
+    border-top: 1px solid #eee; /* Linha de separação sutil */
+}
+
+.acoes-admin form {
+    display: inline-block; /* Permite que os formulários fiquem lado a lado */
+    margin: 0 8px; /* Espaço entre os botões */
+}
+
+.acoes-admin button,
+.acoes-admin a.btn-voltar {
+    padding: 12px 25px; /* Preenchimento interno dos botões */
+    border: none; /* Remove borda padrão */
+    border-radius: 6px; /* Cantos arredondados para os botões */
+    cursor: pointer; /* Muda o cursor ao passar por cima */
+    font-size: 1.1em; /* Tamanho da fonte dos botões */
+    font-weight: bold; /* Texto em negrito */
+    text-decoration: none; /* Remove sublinhado de links */
+    display: inline-block; /* Garante que links se comportem como botões */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transição suave para hover */
+}
+
+.acoes-admin .btn-liberar {
+    background-color: #28a745; /* Verde para Liberar */
+    color: white;
+}
+
+.acoes-admin .btn-liberar:hover {
+    background-color: #218838; /* Verde mais escuro no hover */
+    transform: translateY(-2px); /* Pequeno efeito de levantamento */
+}
+
+.acoes-admin .btn-recusar {
+    background-color: #dc3545; /* Vermelho para Recusar/Excluir */
+    color: white;
+}
+
+.acoes-admin .btn-recusar:hover {
+    background-color: #c82333; /* Vermelho mais escuro no hover */
+    transform: translateY(-2px);
+}
+
+.acoes-admin .btn-voltar {
+    background-color: #6c757d; /* Cinza para Voltar */
+    color: white;
+}
+
+.acoes-admin .btn-voltar:hover {
+    background-color: #5a6268; /* Cinza mais escuro no hover */
+    transform: translateY(-2px);
+}
+
+
+/* -------------------------------------------------------
+   6. Responsividade
+   ------------------------------------------------------- */
+
+/* Para Telas Menores (Tablets e Celulares) */
+@media (max-width: 768px) {
+    .container-receita-pendente {
+        margin: 15px; /* Reduz margens laterais em telas menores */
+        padding: 20px; /* Reduz preenchimento */
+    }
+
+    .container-receita-pendente h2 {
+        font-size: 1.8em; /* Ajusta o tamanho do título */
+    }
+
+    .receita-detalhe p,
+    .receita-detalhe ul li,
+    .receita-detalhe ol li {
+        font-size: 0.95em; /* Reduz ligeiramente o tamanho da fonte do texto */
+    }
+
+    .receita-detalhe h4 {
+        font-size: 1.2em; /* Reduz o tamanho dos subtítulos */
+    }
+
+    .acoes-admin button,
+    .acoes-admin a.btn-voltar {
+        padding: 10px 20px; /* Reduz o padding dos botões */
+        font-size: 1em; /* Ajusta o tamanho da fonte dos botões */
+        margin: 5px; /* Ajusta margem entre botões */
+    }
+
+    /* Empilha os botões em telas menores para melhor toque */
+    .acoes-admin form,
+    .acoes-admin a.btn-voltar {
+        display: block; /* Cada botão/formulário ocupa sua própria linha */
+        margin-bottom: 10px; /* Espaço entre os botões empilhados */
+    }
+}
+
+/* Para Telas Muito Pequenas (Celulares) */
+@media (max-width: 480px) {
+    .container-receita-pendente {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .container-receita-pendente h2 {
+        font-size: 1.5em;
+    }
+
+    .receita-detalhe p,
+    .receita-detalhe ul li,
+    .receita-detalhe ol li {
+        font-size: 0.9em;
+    }
+
+    .receita-detalhe img {
+        margin: 15px auto; /* Reduz margem da imagem */
+    }
+
+    .acoes-admin {
+        padding-top: 15px;
+        margin-top: 20px;
+    }
+
+    .acoes-admin button,
+    .acoes-admin a.btn-voltar {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+}
+
+/* -------------------------------------------------------
+   7. Estilo para o Rodapé (Footer)
+   ------------------------------------------------------- */
+
+/*
+   A classe 'footer' deve estar no seu arquivo 'style.css' ou 'dashboard.css'.
+   Aqui, apenas garantimos que, no contexto do Flexbox do 'body',
+   o footer fique no final após o conteúdo principal.
+   Se o seu footer já está configurado globalmente para ter largura total e cor de fundo,
+   ele automaticamente se posicionará no final devido ao 'flex-direction: column' no body
+   e 'flex-grow: 1' no seu container de conteúdo.
+*/
+footer {
+    /* Garante que o rodapé não cresça, ocupando apenas seu espaço necessário */
+    flex-shrink: 0;
+    /* Adicione aqui qualquer estilo específico para o footer que possa
+       ser sobrescrito ou que precise de ajuste em relação ao layout Flexbox,
+       como padding, background-color, text-align, etc.
+       Normalmente, isso já estaria no seu style.css. */
+    padding: 20px; /* Exemplo de padding */
+    background-color: #333; /* Exemplo de cor de fundo */
+    color: #fff; /* Exemplo de cor de texto */
+    text-align: center; /* Exemplo de alinhamento de texto */
+    margin-top: auto; /* Esta é a propriedade chave para empurrar o footer para baixo */
+}
+
+/* Caso seu footer não seja um elemento direto do body, mas sim de um wrapper,
+   a estratégia de 'margin-top: auto;' no footer ainda funciona,
+   desde que o pai do footer seja um container flex-column. */

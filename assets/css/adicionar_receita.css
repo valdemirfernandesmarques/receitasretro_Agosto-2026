@@ -1,0 +1,139 @@
+/* assets/css/style.css */
+
+/* Estilos base para o corpo da página */
+body.pagina-adicionar-receita {
+    font-family: 'Segoe UI', sans-serif; /* Fonte moderna e legível */
+    background-color: #fff8f0; /* Cor de fundo suave e retrô */
+    margin: 0;
+    padding: 20px;
+    color: #333; /* Cor do texto padrão */
+}
+
+/* Título da página */
+h2 {
+    text-align: center;
+    color: #8b4513; /* Marrom suave */
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+/* Container do formulário */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Estilo das labels (descrição dos campos) */
+label {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* Estilo dos inputs de texto */
+input[type="text"] {
+    font-size: 18px;
+    padding: 10px;
+    width: 100%;
+    max-width: 500px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Estilo do campo de seleção (categoria, etc.) */
+select {
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+    max-width: 280px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Estilo do input de upload de arquivo */
+input[type="file"] {
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 400px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Estilo comum para inputs, textarea, select e file */
+input[type="text"],
+textarea,
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    resize: none; /* Bloqueia o redimensionamento do textarea */
+    font-size: 16px; /* Aumenta o tamanho do texto dentro da caixa textarea */
+}
+
+/* Botão de envio */
+button[type="submit"] {
+    background-color: #8b4513;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+/* Efeito hover no botão */
+button[type="submit"]:hover {
+    background-color: #a0522d;
+}
+
+/* Responsividade para tablets e celulares */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    input[type="text"],
+    textarea,
+    select,
+    input[type="file"] {
+        font-size: 16px;
+    }
+
+    button[type="submit"] {
+        width: 100%; /* Botão ocupa a largura total em telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 20px;
+    }
+
+    label {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+}

@@ -1,0 +1,123 @@
+/* cadastro.css */
+
+/* Container centralizado com largura máxima e padding */
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f7f4f1; /* Fundo clarinho */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Seção do cadastro: flex vertical com espaçamento */
+.cadastro {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Título com cor marrom escura */
+.cadastro h2 {
+  text-align: center;
+  color: #4a2c2a;
+  font-size: 2rem;
+  margin-bottom: 0;
+}
+
+/* Texto explicativo */
+.cadastro p {
+  text-align: center;
+  color: #6b4c4c;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+/* Formulário com layout vertical */
+.form-cadastro {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Labels estilizados */
+.form-cadastro label {
+  font-weight: 600;
+  color: #4a2c2a;
+  font-size: 1rem;
+}
+
+/* Inputs e textarea: padding, borda suave e foco */
+.form-cadastro input[type="text"],
+.form-cadastro input[type="email"],
+.form-cadastro input[type="tel"],
+.form-cadastro input[type="password"],
+.form-cadastro textarea {
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #d9b89e;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-cadastro input[type="text"]:focus,
+.form-cadastro input[type="email"]:focus,
+.form-cadastro input[type="tel"]:focus,
+.form-cadastro input[type="password"]:focus,
+.form-cadastro textarea:focus {
+  border-color: #a3695a;
+}
+
+/* Botão: marrom, branco, com hover */
+.form-cadastro button {
+  background-color: #a3695a;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.form-cadastro button:hover {
+  background-color: #7a4e43;
+}
+
+/* Link para login abaixo do formulário */
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  color: #4a2c2a;
+}
+
+.login-link a {
+  color: #a3695a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 600px) {
+  .container {
+    margin: 20px 10px;
+    padding: 15px;
+  }
+
+  .cadastro h2 {
+    font-size: 1.5rem;
+  }
+
+  .form-cadastro button {
+    font-size: 1rem;
+  }
+}

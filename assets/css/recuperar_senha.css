@@ -1,0 +1,260 @@
+/* =========================== */
+/* recuperar_senha.css - Estilo da página de recuperação de senha do site Receitas Retrô */
+/* =========================== */
+
+/*
+* AJUSTE CRÍTICO: Garante que o html e body ocupem 100% da altura da tela
+* e usa Flexbox para empilhar o header, main e footer.
+* IMPORTANTE: Esta regra DEVE estar no seu CSS global (style.css) ou ser a primeira a ser carregada.
+* Se já estiver em style.css, esta repetição aqui pode ser desnecessária, mas é segura.
+*/
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace; /* Fonte padrão para o corpo, como no form-box */
+    background-color: var(--fundo-claro, #fffaf0); /* Cor de fundo clara e retrô */
+    color: #4a2f1c; /* Cor de texto padrão */
+    display: flex;
+    flex-direction: column; /* Organiza header, main, footer em coluna */
+}
+
+/*
+* CONTAINER PRINCIPAL DA RECUPERAÇÃO DE SENHA
+* Usando 'flex: 1;' para que este contêiner cresça e ocupe todo o espaço
+* disponível entre o cabeçalho e o rodapé.
+*/
+.form-container {
+    flex: 1; /* Faz o contêiner crescer e preencher o espaço restante. */
+    display: flex; /* Habilita o uso de Flexbox para alinhamento do formulário dentro dele. */
+    justify-content: center; /* Centraliza o formulário horizontalmente. */
+    align-items: center; /* Centraliza o formulário verticalmente dentro do espaço disponível. */
+    padding: 20px; /* Adiciona um padding geral para não encostar nas bordas da tela. */
+    box-sizing: border-box; /* Inclui padding no cálculo do tamanho total. */
+}
+
+/*
+* CAIXA DO FORMULÁRIO DE RECUPERAÇÃO (Formulário Principal)
+* AJUSTADO: Adicionado 'margin-top' para baixar a caixa um pouco.
+*/
+.form-box {
+    background-color: #fff; /* Fundo branco para um bom contraste. */
+    padding: 2.5rem; /* Padding para expandir a caixa internamente. */
+    border: 2px solid #c7a17a; /* Borda com a cor marrom claro, no estilo retrô. */
+    border-radius: 10px; /* Cantos arredondados para um visual mais suave. */
+    width: 90%; /* A caixa ocupa 90% da largura disponível no contêiner... */
+    max-width: 550px; /* Largura máxima para ajuste na página. */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada para um destaque elegante. */
+    font-family: 'Courier New', Courier, monospace; /* Fonte com estilo retrô. */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total. */
+
+    margin-top: 30px; /* <--- AJUSTE AQUI: Adiciona uma margem superior para baixar a caixa. */
+                      /* Você pode ajustar este valor (e.g., 20px, 40px) para encontrar o ideal. */
+    margin-bottom: 0; /* Mantido em 0 para centralização vertical (se houver footer). */
+    text-align: center; /* Centraliza o conteúdo textual dentro da caixa, como parágrafos. */
+}
+
+/*
+* TÍTULO DO FORMULÁRIO (Ex: "Recuperar Senha")
+* Estilo para o cabeçalho dentro da caixa do formulário.
+*/
+.form-box h2 {
+    text-align: center; /* Centraliza o texto do título. */
+    color: #6b4c3b; /* Cor marrom/retrô para o título. */
+    font-size: 2.4rem; /* Ligeiramente maior para mais destaque no título. */
+    margin-bottom: 2rem; /* Espaçamento abaixo do título para separar dos campos. */
+}
+
+/*
+* GRUPO DE FORMULÁRIO (Label + Input)
+* Contêiner para cada par de rótulo e campo de entrada.
+*/
+.form-group {
+    margin-bottom: 1.2rem; /* Ligeiramente mais espaço entre cada grupo de formulário. */
+    text-align: left; /* Alinha o texto das labels e inputs à esquerda. */
+}
+
+/*
+* ESTILIZAÇÃO DOS RÓTULOS (Ex: "E-mail")
+* Estilo para as legendas dos campos de entrada.
+*/
+.form-group label {
+    display: block; /* Cada rótulo ocupa sua própria linha. */
+    margin-top: 1rem; /* Espaço acima de cada rótulo, separando-os. */
+    color: #333; /* Cor escura para boa legibilidade. */
+    font-weight: bold; /* Texto em negrito. */
+    font-size: 1.05rem; /* Ligeiramente maior para melhor leitura. */
+}
+
+/*
+* ESTILIZAÇÃO DOS CAMPOS DE ENTRADA (E-mail)
+* Estilo para o input onde o usuário digita o e-mail.
+*/
+.form-group input[type="email"] {
+    width: 100%; /* Ocupa toda a largura disponível da caixa. */
+    padding: 14px; /* Aumentado para um toque mais confortável e visualmente maior. */
+    margin-top: 0.5rem; /* Pequeno espaço acima do input, separando da label. */
+    border: 1px solid #aaa; /* Borda cinza suave. */
+    border-radius: 5px; /* Cantos arredondados. */
+    font-size: 1.1rem; /* Aumentado para melhor digitação e leitura. */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura total. */
+}
+
+/*
+* ESTILIZAÇÃO DO BOTÃO DE ENVIAR (Recuperar Senha)
+* Estilo para o botão de "Enviar Link de Recuperação".
+*/
+.form-box button {
+    width: 100%; /* Ocupa toda a largura da caixa. */
+    padding: 16px; /* Altura do botão aumentada para melhor usabilidade e destaque. */
+    margin-top: 2rem; /* Espaçamento acima do botão, separando-o dos campos. */
+    background-color: #c7a17a; /* Cor de fundo retrô (a mesma do botão de login). */
+    border: none; /* Sem borda. */
+    color: white; /* Texto branco. */
+    font-weight: bold; /* Texto em negrito. */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável. */
+    border-radius: 5px; /* Cantos arredondados. */
+    font-size: 1.15rem; /* Tamanho da fonte do botão ligeiramente maior para destaque. */
+    transition: background-color 0.3s ease; /* Transição suave para o efeito hover. */
+}
+
+/* Efeito ao passar o mouse sobre o botão */
+.form-box button:hover {
+    background-color: #a57b53; /* Tom mais escuro da cor retrô no hover. */
+}
+
+/*
+* ESTILIZAÇÃO DOS PARÁGRAFOS E LINKS AUXILIARES (Ex: "Voltar para o login" ou "Lembrou da senha? Fazer Login")
+* Estilo para textos informativos e links na parte inferior do formulário.
+* font-size e negrito no link para maior visibilidade.
+*/
+.form-box p {
+    margin-top: 1.5rem; /* Mais espaço acima do parágrafo para separar do botão. */
+    font-size: 1.05rem; /* Tamanho para ser visível e fácil de ler. */
+    color: #555; /* Cor cinza para legibilidade. */
+}
+
+.form-box p a {
+    color: #6b4c3b; /* Cor retrô para o link. */
+    text-decoration: none; /* Remove o sublinhado padrão. */
+    transition: color 0.3s ease; /* Transição suave para o efeito hover. */
+    font-weight: bold; /* Mantido negrito para o link ter mais destaque. */
+}
+
+/* Efeito ao passar o mouse sobre o link */
+.form-box p a:hover {
+    color: #a57b53; /* Muda a cor do link no hover. */
+    text-decoration: underline; /* Adiciona sublinhado no hover para indicar interatividade. */
+}
+
+/*
+* ESTILO PARA MENSAGENS DE FEEDBACK (Sucesso/Erro)
+* Usado para exibir mensagens de sucesso (link enviado) ou erro (e-mail inválido).
+*/
+.mensagem {
+    padding: 14px 20px; /* Mais padding para as mensagens. */
+    margin-bottom: 1.5rem; /* Mais espaço abaixo da mensagem. */
+    border-radius: 5px; /* Cantos arredondados. */
+    font-size: 1rem; /* Ligeiramente maior para as mensagens. */
+    text-align: center; /* Centraliza o texto. */
+    border: 1px solid transparent; /* Borda transparente por padrão. */
+}
+
+/* Estilo para mensagem de SUCESSO */
+.mensagem.sucesso {
+    background-color: #d4edda; /* Verde claro. */
+    color: #155724; /* Verde escuro. */
+    border-color: #c3e6cb; /* Borda verde clara. */
+}
+
+/* Estilo para mensagem de ERRO */
+.mensagem.erro {
+    background-color: #f8d7da; /* Vermelho claro. */
+    color: #721c24; /* Vermelho escuro. */
+    border-color: #f5c6cb; /* Borda vermelha clara. */
+}
+
+
+/* =========================== */
+/* RESPONSIVIDADE ADAPTATIVA   */
+/* =========================== */
+
+/*
+* MEDIA QUERY PARA TELAS PEQUENAS (Smartphones na maioria)
+* Ajusta o layout para dispositivos com largura de tela de até 500px.
+* A caixa do formulário se adapta, mas mantém a usabilidade e legibilidade.
+*/
+@media (max-width: 500px) {
+    .form-container {
+        padding: 10px; /* Reduz o padding do contêiner principal para mobile. */
+    }
+
+    .form-box {
+        padding: 2rem; /* Ajustado o padding para telas menores. */
+        max-width: 90%; /* Permite que a caixa ocupe mais largura em telas pequenas. */
+        margin-top: 20px; /* <--- AJUSTE MOBILE: Adiciona margem superior para baixar no mobile. */
+        margin-bottom: 0; /* Mantido em 0. */
+    }
+
+    .form-box h2 {
+        font-size: 2rem; /* Ligeira redução para mobile. */
+        margin-bottom: 1.8rem; /* Ajuste do espaçamento. */
+    }
+
+    .form-group label {
+        font-size: 1rem; /* Ligeira redução para mobile. */
+    }
+
+    .form-group input[type="email"],
+    .form-box button {
+        font-size: 1.05rem; /* Fonte ligeiramente menor para campos e botões em mobile. */
+        padding: 12px; /* Reduz um pouco o padding dos campos e botões, mas ainda confortável. */
+    }
+
+    .form-box button {
+        margin-top: 1.8rem; /* Ajuste do espaçamento. */
+    }
+
+    .form-box p {
+        font-size: 0.95rem; /* Tamanho do parágrafo em mobile. */
+    }
+
+    .mensagem {
+        font-size: 0.95rem; /* Ajusta o tamanho da fonte da mensagem para mobile. */
+        padding: 12px 18px; /* Ajusta o padding da mensagem. */
+    }
+}
+
+/*
+* MEDIA QUERY PARA TELAS MUITO PEQUENAS (Smartphones compactos ou landscape)
+* Ajustes para dispositivos com largura de tela de até 360px.
+* Garante que a interface continue usável e legível em dispositivos mais compactos.
+*/
+@media (max-width: 360px) {
+    .form-container {
+        padding: 5px; /* Reduz ainda mais o padding do contêiner principal para telas muito pequenas. */
+    }
+    .form-box {
+        padding: 1.8rem; /* Reduz o padding um pouco mais para telas muito pequenas. */
+        margin-top: 15px; /* <--- AJUSTE MOBILE PEQUENO: Adiciona margem superior para baixar. */
+        margin-bottom: 0; /* Mantido em 0. */
+    }
+
+    .form-box h2 {
+        font-size: 1.8rem; /* Título um pouco menor. */
+    }
+
+    .form-group label,
+    .form-group input[type="email"],
+    .form-box button,
+    .form-box p,
+    .form-box p a,
+    .mensagem {
+        font-size: 0.95rem; /* Fontes levemente menores para caber melhor. */
+    }
+
+    .form-group input[type="email"],
+    .form-box button {
+        padding: 10px; /* Padding um pouco menor para campos e botões. */
+    }
+}

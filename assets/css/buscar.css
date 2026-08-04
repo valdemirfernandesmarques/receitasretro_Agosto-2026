@@ -1,0 +1,186 @@
+/* ========================================================== */
+/* ESTILO GERAL DA PÁGINA buscar.php COM AJUSTE FINAL SUTIL */
+/* ========================================================== */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Georgia', serif;
+    background-color: #fffaf0;
+    overflow-x: hidden;
+}
+
+main.conteudo-principal {
+    flex: 1;
+    padding: 20px;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.resultados-titulo {
+    font-family: 'Arial', sans-serif;
+    font-size: 1.8rem;
+    color: #3d2c19;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: #7d3f00;
+    color: #fffaf0;
+    text-align: center;
+    padding: 15px 10px;
+    font-size: 0.9em;
+    width: 100%;
+    margin-top: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #d2b48c;
+}
+
+th, td {
+    padding: 12px 10px;
+    border: 1px solid #d2b48c;
+    text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    vertical-align: top;
+}
+
+th {
+    background-color: #f4e3d7;
+    font-weight: bold;
+    color: #4d2c19;
+}
+
+tr:nth-child(even) {
+    background-color: #fdf6ed;
+}
+
+/* ========================================================== */
+/* RESPONSIVIDADE COM AJUSTES FINAIS SUTIS */
+/* ========================================================== */
+
+@media (max-width: 768px) {
+    .resultados-titulo {
+        font-size: 1em;
+        margin-bottom: 5px;
+    }
+
+    main.conteudo-principal {
+        padding: 6px 1px;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-top: 6px;
+        border: 1px solid #d2b48c;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+
+    table {
+        min-width: 470px; /* -10px do anterior */
+        margin-top: 0;
+        border: none;
+    }
+
+    th, td {
+        padding: 3px 1px;
+        font-size: 0.66em; /* ligeiramente menor */
+        line-height: 1.1;
+        white-space: normal;
+    }
+
+    th {
+        font-size: 0.7em;
+    }
+
+    td:nth-child(1), th:nth-child(1) { min-width: 82px; }
+    td:nth-child(2), th:nth-child(2) { min-width: 165px; }
+    td:nth-child(3), th:nth-child(3) { min-width: 62px; }
+    td:nth-child(4), th:nth-child(4) { min-width: 62px; }
+    td:nth-child(5), th:nth-child(5) { min-width: 48px; } /* reduzido */
+}
+
+@media (max-width: 480px) {
+    .resultados-titulo {
+        font-size: 0.82em;
+        margin-bottom: 3px;
+    }
+
+    main.conteudo-principal {
+        padding: 4px 0px;
+    }
+
+    .table-responsive {
+        margin-top: 4px;
+        border-radius: 3px;
+    }
+
+    table {
+        min-width: 370px; /* ligeiramente menor */
+    }
+
+    th, td {
+        padding: 1px 0px;
+        font-size: 0.59em; /* menor que 0.6em */
+    }
+
+    th {
+        font-size: 0.65em;
+    }
+
+    td:nth-child(1), th:nth-child(1) { min-width: 72px; }
+    td:nth-child(2), th:nth-child(2) { min-width: 145px; }
+    td:nth-child(3), th:nth-child(3) { min-width: 52px; }
+    td:nth-child(4), th:nth-child(4) { min-width: 52px; }
+    td:nth-child(5), th:nth-child(5) { min-width: 38px; } /* ajuste final */
+}
+
+@media (max-width: 360px) {
+    .resultados-titulo {
+        font-size: 0.68em;
+        margin-bottom: 1px;
+    }
+
+    main.conteudo-principal {
+        padding: 2px 0px;
+    }
+
+    .table-responsive {
+        margin-top: 2px;
+        border-radius: 1px;
+    }
+
+    table {
+        min-width: 315px; /* ajuste leve */
+    }
+
+    th, td {
+        padding: 0px;
+        font-size: 0.54em; /* mínimo final */
+    }
+
+    th {
+        font-size: 0.6em;
+    }
+
+    td:nth-child(1), th:nth-child(1) { min-width: 62px; }
+    td:nth-child(2), th:nth-child(2) { min-width: 125px; }
+    td:nth-child(3), th:nth-child(3) { min-width: 42px; }
+    td:nth-child(4), th:nth-child(4) { min-width: 42px; }
+    td:nth-child(5), th:nth-child(5) { min-width: 30px; } /* final mesmo */
+}

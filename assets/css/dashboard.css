@@ -1,0 +1,476 @@
+/* ==========================
+   CSS - Painel do Administrador
+   Caminho: assets/css/dashboard.css
+   Autor: Valdemir
+   Descrição: Estilização do painel administrativo com foco em tabelas com rolagem horizontal em dispositivos móveis e layout que se ajusta à tela.
+   ========================== */
+
+/* -------------------------------------------
+   1. Reset Básico
+   ------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Essencial para que padding e border não aumentem a largura total */
+}
+
+/* -------------------------------------------
+   2. Estilização Geral do Body e Layout Principal
+   ------------------------------------------- */
+body.pagina-dashboard {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fefefe;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden; /* **CRÍTICO:** Previne a barra de rolagem horizontal na página inteira */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0; /* O container principal não terá padding horizontal externo */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* -------------------------------------------
+   3. Estilização do Cabeçalho (Header)
+   ------------------------------------------- */
+.main-header {
+    background-color: #f8f8f8;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.top-nav {
+    display: flex;
+    flex-direction: column; /* Coloca logo, menu e busca em coluna em mobile */
+    align-items: center;
+    padding: 0 10px; /* Padding interno para o cabeçalho */
+}
+
+.main-header .logo {
+    max-width: 150px; /* Logo menor em telas pequenas */
+    margin-bottom: 6px;
+}
+.main-header .logo img {
+    max-width: 100%;
+    height: auto;
+}
+
+.menu-icon {
+    display: none; /* Por enquanto oculto, se for usar JS para toggle, terá que mostrar */
+}
+
+.main-header .nav-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap; /* Permite que os links quebrem linha */
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 0;
+    width: 100%; /* Ocupa a largura total para ajudar na centralização e quebra */
+}
+
+.main-header .nav-links li {
+    flex-shrink: 0; /* Impede que os itens do menu encolham demais */
+}
+
+.main-header .nav-links li a {
+    text-decoration: none;
+    color: #5C4033;
+    padding: 6px 10px; /* Reduz padding para caber mais */
+    border-radius: 4px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap; /* Impede que o texto do link quebre */
+    font-size: 0.9em; /* Reduz um pouco o tamanho da fonte */
+}
+
+.main-header .nav-links li a:hover {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.main-header .search-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 0 10px; /* Padding para a barra de busca */
+    width: 100%; /* Ocupa a largura total */
+}
+
+.main-header .search-bar input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1; /* Permite que o input cresça e ocupe o espaço */
+    max-width: 250px; /* Limita a largura máxima para não ficar muito grande */
+}
+
+.main-header .search-bar button {
+    padding: 8px 12px;
+    background-color: #5C4033;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.main-header .search-bar button:hover {
+    background-color: #4A3329;
+}
+
+/* -------------------------------------------
+   4. Conteúdo Principal da Dashboard
+   ------------------------------------------- */
+.dashboard-content {
+    flex-grow: 1;
+    padding: 20px 10px; /* Adiciona padding lateral aqui para o conteúdo principal */
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: #444;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    font-size: 1.6em;
+    text-align: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.table-responsive {
+    overflow-x: auto; /* **************** CRÍTICO: ATIVA A ROLAGEM HORIZONTAL AQUI **************** */
+    -webkit-overflow-scrolling: touch; /* Melhora a rolagem em iOS */
+    margin-bottom: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 0; /* Não adicione padding horizontal aqui, deixe a tabela gerenciar */
+}
+
+/* -------------------------------------------
+   5. Tabelas
+   ------------------------------------------- */
+table {
+    width: 100%;
+    /* Define uma largura mínima para a tabela. Se a tela for menor, a rolagem aparecerá. */
+    min-width: 600px; /* Valor padrão para desktop/tablets. Será ajustado em media queries. */
+    border-collapse: collapse;
+    background-color: transparent; /* A cor de fundo vem do .table-responsive */
+    box-shadow: none; /* A sombra vem do .table-responsive */
+    border-radius: 0; /* As bordas arredondadas vêm do .table-responsive */
+    margin: 0;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    white-space: nowrap; /* **************** CRÍTICO: Impede que o texto quebre a linha, forçando a largura da coluna **************** */
+}
+
+th {
+    background-color: #f0f0f0;
+    color: #555;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+tr:nth-child(even) {
+    background-color: #fcfcfc;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* -------------------------------------------
+   6. Ações / Links
+   ------------------------------------------- */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+a[href="../index.php"] {
+    display: block;
+    margin: 20px auto;
+    background-color: #dc3545;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    font-size: 1em;
+    text-align: center;
+    max-width: 200px;
+}
+
+a[href="../index.php"]:hover {
+    background-color: #c82333;
+}
+
+/* -------------------------------------------
+   7. Separador
+   ------------------------------------------- */
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 40px 0;
+}
+
+/* -------------------------------------------
+   8. Rodapé (Footer)
+   ------------------------------------------- */
+.main-footer {
+    margin-bottom: bottom;
+    padding: 20px 10px; /* Adiciona padding lateral aqui */
+    font-size: 0.9em;
+    flex-shrink: 0;
+    text-align: center;
+    padding: 15px 0;
+}
+
+/* -------------------------------------------
+   9. Responsividade (Media Queries)
+   ------------------------------------------- */
+
+/* Media query para telas menores que 768px (tablets e celulares) */
+@media (max-width: 768px) {
+    .container {
+        padding: 0;
+    }
+
+    /* Ajustes para o cabeçalho para caber bem em telas menores */
+    .main-header {
+        padding: 10px 0;
+        margin-bottom: 15px;
+    }
+
+    .top-nav {
+        padding: 0 10px;
+    }
+
+    .main-header .logo {
+        font-size: 1.5em;
+        margin-bottom: 5px;
+    }
+
+    .main-header .nav-links {
+        gap: 5px;
+        font-size: 0.85em;
+        margin-top: 5px;
+    }
+
+    .main-header .nav-links li a {
+        padding: 4px 8px;
+    }
+
+    .main-header .search-bar {
+        margin-top: 10px;
+        max-width: 90%; /* Ajuste para preencher a largura sem estourar */
+        padding: 0;
+    }
+
+    .main-header .search-bar input[type="text"] {
+        padding: 6px;
+        font-size: 0.85em;
+    }
+
+    .main-header .search-bar button {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+
+    .dashboard-content, .main-footer {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Ajuste no TÍTULO H2 */
+    h2 {
+        font-size: 1.25em; /* Ligeiramente menor */
+        margin-bottom: 8px;
+        padding-bottom: 2px;
+    }
+
+    /* *************** Ajustes CRÍTICOS para TODAS AS TABELAS com Scroll Horizontal *************** */
+    .table-responsive {
+        padding: 0 2px; /* **AJUSTADO:** Padding lateral da div responsiva no mínimo */
+    }
+
+    table {
+        min-width: 330px; /* **AJUSTADO NOVAMENTE:** Valor bem ajustado para 768px. */
+    }
+
+    th, td {
+        padding: 2px 4px; /* **AJUSTADO:** Padding interno das células ainda menor */
+        font-size: 0.7em; /* **AJUSTADO:** Fonte ligeiramente menor */
+        white-space: nowrap; /* Mantém o texto em uma única linha */
+    }
+
+    /* Ajustes para os links de ação dentro da célula */
+    td a {
+        display: inline-block;
+        margin-right: 0px; /* Espaçamento mínimo */
+        font-size: 0.62em; /* **AJUSTADO:** Fonte ainda menor */
+        padding: 0px 0px; /* **AJUSTADO:** Padding praticamente zero */
+        background-color: #e9ecef;
+        border-radius: 2px; /* **AJUSTADO:** Borda levemente menor */
+        color: #007bff;
+        white-space: nowrap;
+    }
+    td a:last-child {
+        margin-right: 0;
+    }
+
+    a[href="../index.php"] {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    /* Ajuste no Rodapé para 768px */
+    .main-footer {
+        padding: 12px 8px; /* Ligeiramente menor */
+        font-size: 0.78em; /* Ligeiramente menor */
+    }
+    .main-footer p {
+        margin-bottom: 4px;
+    }
+    .main-footer .social-icons,
+    .main-footer .contact-info {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+}
+
+/* Media query para telas muito pequenas (smartphones menores, ex: 320px - 480px) */
+@media (max-width: 480px) {
+    .main-header .logo {
+        font-size: 1.35em;
+    }
+
+    .main-header .nav-links {
+        gap: 2px;
+        font-size: 0.78em;
+    }
+
+    .main-header .nav-links li a {
+        padding: 2px 5px;
+    }
+
+    .main-header .search-bar {
+        max-width: 100%;
+    }
+
+    .main-header .search-bar input[type="text"] {
+        font-size: 0.78em;
+    }
+
+    .main-header .search-bar button {
+        font-size: 0.78em;
+    }
+
+    .dashboard-content, .main-footer {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    /* Ajuste no TÍTULO H2 */
+    h2 {
+        font-size: 1.15em; /* Ainda menor */
+        margin-bottom: 6px;
+        padding-bottom: 1px;
+    }
+
+    /* Ajustes para a tabela em telas muito pequenas */
+    table {
+        min-width: 260px; /* **AJUSTADO NOVAMENTE:** Mais compactado para < 480px. */
+    }
+
+    th, td {
+        padding: 1px 3px; /* **AJUSTADO:** Padding interno das células no mínimo */
+        font-size: 0.6em; /* **AJUSTADO:** Fonte mínima para células */
+    }
+
+    td a {
+        padding: 0; /* Sem padding para links */
+        font-size: 0.52em; /* Links de ação ainda menores */
+        border-radius: 1px; /* **AJUSTADO:** Borda quase reta */
+    }
+
+    a[href="../index.php"] {
+        padding: 5px 8px;
+        font-size: 0.75em;
+    }
+
+    /* Ajuste no Rodapé para 480px */
+    .main-footer {
+        padding: 8px 4px; /* Mais compacto */
+        font-size: 0.68em; /* Mais compacto */
+    }
+    .main-footer p {
+        margin-bottom: 2px;
+    }
+    .main-footer .social-icons,
+    .main-footer .contact-info {
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+}
+
+/* Media query adicional para telas EXTREMAMENTE pequenas (ex: largura 320px) */
+@media (max-width: 320px) {
+    /* Ajuste no TÍTULO H2 */
+    h2 {
+        font-size: 1em; /* Fonte mínima para o título H2 */
+        margin-bottom: 4px;
+        padding-bottom: 0px; /* Pode remover totalmente o padding bottom */
+    }
+
+    table {
+        min-width: 240px; /* **AJUSTADO NOVAMENTE:** Valor bem agressivo para telas de 320px */
+    }
+    th, td {
+        padding: 0px 1px; /* **AJUSTADO:** Padding no mínimo absoluto para células */
+        font-size: 0.55em; /* **AJUSTADO:** Fonte no mínimo absoluto */
+    }
+    td a {
+        font-size: 0.48em; /* **AJUSTADO:** Links de ação menores ainda */
+        border-radius: 0px; /* Borda totalmente reta para economizar pixels */
+    }
+
+    /* Ajuste no Rodapé para 320px */
+    .main-footer {
+        padding: 4px 4px; /* Padding vertical mínimo */
+        font-size: 0.62em; /* Fonte no mínimo */
+    }
+    .main-footer p {
+        margin-bottom: 1px;
+    }
+    .main-footer .social-icons,
+    .main-footer .contact-info {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+}

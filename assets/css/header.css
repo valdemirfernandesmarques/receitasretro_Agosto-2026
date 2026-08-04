@@ -1,0 +1,289 @@
+/* ========================================================== */
+/* HEADER FIXO PARA TODOS OS DISPOSITIVOS - LAYOUT FINAL COM APENAS CSS */
+/* ========================================================== */
+
+/* Área principal do cabeçalho */
+header.site-header {
+    background-color: #f2d7b6; /* Cor de fundo do cabeçalho */
+    border-bottom: 3px solid #a97449; /* Borda inferior */
+    padding: 10px 0; /* Padding superior e inferior do header */
+    box-sizing: border-box; /* Garante que padding não adicione largura total */
+    width: 100%;
+}
+
+/* Container flex do header (o que contém logo, search e menu) */
+.navbar {
+    display: flex;
+    flex-direction: column; /* Itens empilhados verticalmente por padrão */
+    align-items: center; /* Centraliza os itens horizontalmente */
+    max-width: 1200px; /* Largura máxima do conteúdo do header */
+    margin: 0 auto; /* Centraliza o .navbar na página */
+    padding: 0 15px; /* Padding lateral */
+    box-sizing: border-box;
+}
+
+/* Logo principal - CONTAINER */
+.logo {
+    margin-bottom: 8px; /* Espaço abaixo da logo */
+
+    /* limitar uma largura máxima do container, para controlar o tamanho da logo */
+    max-width: 300px; /* Exemplo: no desktop o container da logo fica até 300px de largura */
+    margin-left: auto; /* Centraliza o container horizontalmente */
+    margin-right: auto;
+}
+
+.logo img {
+    max-width: 100%;  /* Imagem nunca fica maior que o container */
+    height: auto;     /* Mantém a proporção natural da imagem */
+    display: block;
+    margin: 0 auto;
+}
+
+/* Barra de pesquisa */
+.search-bar {
+    margin-bottom: 15px; /* Espaço abaixo da barra de busca */
+    display: flex; /* Transforma a barra de busca em um container flex */
+    justify-content: center; /* Centraliza input e button */
+    align-items: center; /* Alinha verticalmente input e button */
+    width: 100%; /* Ocupa a largura disponível */
+}
+
+.search-bar form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%; /* Para que o formulário possa ter max-width */
+    max-width: 400px; /* Limita a largura da barra de busca em desktop */
+}
+
+.search-bar input {
+    padding: 8px 12px; /* Padding do input */
+    border: 1px solid #a97449; /* Borda do input */
+    border-radius: 5px; /* Cantos arredondados */
+    flex-grow: 1; /* Permite que o input cresça */
+    max-width: 80%; /* Garante que ocupe a maior parte do form */
+    font-size: 1rem; /* Tamanho da fonte do input */
+    box-sizing: border-box;
+}
+
+.search-bar button {
+    padding: 8px 12px; /* Padding do botão */
+    background-color: #a97449; /* Cor de fundo do botão */
+    border: none; /* Sem borda */
+    color: #fff; /* Cor do texto do botão */
+    border-radius: 5px; /* Cantos arredondados */
+    cursor: pointer; /* Cursor de ponteiro */
+    margin-left: 5px; /* Espaçamento à esquerda do botão */
+    font-size: 1rem; /* Tamanho da fonte do botão */
+    white-space: nowrap; /* Impede que o texto do botão quebre linha */
+    transition: background-color 0.3s ease;
+}
+.search-bar button:hover {
+    background-color: #7d3f00;
+}
+
+/* MENU PRINCIPAL */
+.menu {
+    list-style: none; /* Remove marcadores de lista */
+    display: flex; /* Habilita Flexbox para os itens do menu */
+    flex-direction: row; /* Itens do menu horizontalmente por padrão */
+    flex-wrap: wrap; /* Permite que os itens quebrem de linha se necessário */
+    justify-content: center; /* Centraliza os itens do menu */
+    gap: 8px; /* Espaçamento entre os itens do menu (desktop) */
+    padding: 0;
+    margin: 0;
+    width: 100%; /* Garante que o menu ocupe toda a largura disponível */
+}
+
+.menu li {
+    position: relative; /* Necessário para o posicionamento do dropdown */
+    min-width: fit-content;
+    flex-shrink: 0; /* Impede encolhimento no desktop */
+}
+
+.menu a {
+    display: block;
+    padding: 11px 16px; /* Padding dos links (desktop) */
+    background-color: #f7e8d0; /* Cor de fundo dos links */
+    color: #3d2c29; /* Cor do texto dos links */
+    border-radius: 5px; /* Cantos arredondados */
+    text-decoration: none; /* Remove sublinhado */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave para hover */
+    white-space: nowrap; /* IMPEDE QUE TEXTOS INDIVIDUAIS DO MENU QUEBREM LINHA */
+    font-size: 1rem; /* Tamanho da fonte padrão para o menu (desktop) */
+}
+
+.menu a:hover {
+    background-color: #a97449; /* Cor de fundo no hover */
+    color: #fff; /* Cor do texto no hover */
+}
+
+/* DROPDOWN DO MENU */
+.dropdown-content {
+    display: none; /* Esconde o dropdown por padrão */
+    position: absolute; /* Posicionamento absoluto em relação ao pai (.menu li) */
+    background-color: #f7e8d0; /* Cor de fundo do dropdown */
+    min-width: 180px; /* Largura mínima do dropdown (desktop) */
+    top: 100%; /* Posiciona o dropdown abaixo do item pai */
+    left: 0; /* Alinha o dropdown à esquerda do item pai */
+    z-index: 999; /* Garante que o dropdown fique acima de outros elementos */
+    border-radius: 0 0 5px 5px; /* Cantos arredondados apenas na parte inferior */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-direction: column;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block; /* Mostra o dropdown no hover do item pai */
+}
+
+.dropdown-content li a {
+    padding: 10px 15px; /* Padding para itens internos do dropdown */
+    background-color: #f7e8d0;
+    color: #3d2c29;
+    border-radius: 0; /* Remove cantos arredondados para itens internos */
+    white-space: nowrap;
+    font-size: 0.95rem; /* Fonte para itens internos do dropdown */
+    border-bottom: 1px solid #e0c8b0; /* Separador entre itens do dropdown */
+}
+.dropdown-content li:last-child a {
+    border-bottom: none; /* Remove borda do último item do dropdown */
+    border-radius: 0 0 5px 5px; /* Arredonda o último item na parte inferior */
+}
+
+.dropdown-content li a:hover {
+    background-color: #a97449;
+    color: #fff;
+}
+
+
+/* ========================================================== */
+/* MEDIA QUERIES PARA RESPONSIVIDADE (APENAS CSS) */
+/* ========================================================== */
+
+@media (max-width: 768px) {
+    header.site-header {
+        padding: 8px 0;
+    }
+
+    .navbar {
+        flex-direction: column;
+        padding: 0 10px;
+    }
+
+    .logo {
+        max-width: 150px; /* Logo menor em telas pequenas */
+        margin-bottom: 6px;
+    }
+    .logo img {
+        max-width: 100%;
+        height: auto;
+    }
+   
+    .search-bar {
+        margin-bottom: 10px;
+    }
+    .search-bar form {
+        max-width: 90%;
+    }
+    .search-bar input,
+    .search-bar button {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+    }
+
+    .menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px; /* **AJUSTADO**: DIMINUÍDO um pouco mais o espaçamento para tablet/mobile */
+        margin-top: 5px;
+    }
+    .menu li {
+        flex-basis: auto;
+        flex-grow: 0; /* **AJUSTADO**: Desativado flex-grow para evitar que ocupem espaço demais */
+        flex-shrink: 1; /* Permite encolher */
+        text-align: center;
+    }
+    .menu a {
+        padding: 7px 9px; /* **AJUSTADO**: Padding um pouco menor para tablet/mobile */
+        font-size: 0.8rem; /* **AJUSTADO**: Fonte um pouco menor para tablet/mobile */
+        white-space: normal;
+    }
+    
+    .dropdown-content {
+        position: static;
+        background-color: transparent;
+        box-shadow: none;
+        min-width: auto;
+        width: 100%;
+        border-radius: 0;
+        border-top: 1px solid #e0c8b0;
+    }
+    .dropdown-content li a {
+        padding: 7px 18px; /* Padding com indentação para sub-itens */
+        font-size: 0.75rem; /* Fonte para sub-itens */
+        background-color: transparent;
+        border-bottom: 1px solid #e0c8b0;
+    }
+    .dropdown-content li:last-child a {
+        border-bottom: none;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    header.site-header {
+        padding: 5px 0;
+    }
+    .logo a {
+        font-size: 20px;
+    }
+
+    .search-bar input,
+    .search-bar button {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+
+    .menu {
+        gap: 3px; /* **AJUSTADO**: Espaçamento ainda menor para celulares */
+    }
+    .menu a {
+        padding: 5px 7px; /* **AJUSTADO**: Padding mais compacto para celulares */
+        font-size: 0.7rem; /* **AJUSTADO**: Fonte mais compacta para celulares */
+    }
+    .dropdown-content li a {
+        padding: 5px 12px; /* **AJUSTADO**: Padding e indentação mínimos */
+        font-size: 0.65rem; /* **AJUSTADO**: Fonte no limite */
+    }
+}
+
+@media (max-width: 360px) {
+    header.site-header {
+        padding: 3px 0;
+    }
+    .logo a {
+        font-size: 18px;
+    }
+    .search-bar form {
+        max-width: 95%;
+    }
+    .search-bar input,
+    .search-bar button {
+        padding: 4px 6px;
+        font-size: 0.7rem;
+    }
+    .menu {
+        gap: 1px; /* **AJUSTADO**: Espaçamento mínimo absoluto para telas muito pequenas */
+    }
+    .menu a {
+        padding: 4px 5px; /* **AJUSTADO**: Padding no limite */
+        font-size: 0.62rem; /* **AJUSTADO**: Fonte ainda menor para telas muito pequenas */
+    }
+    .dropdown-content li a {
+        padding: 4px 10px; /* **AJUSTADO**: Padding e indentação mínimos */
+        font-size: 0.58rem; /* **AJUSTADO**: Fonte no limite */
+    }
+}
