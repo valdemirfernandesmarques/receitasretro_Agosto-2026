@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     && docker-php-ext-install pdo pdo_mysql mysqli zip
 
+# Força o Apache a utilizar UTF-8 em todas as respostas HTTP
+RUN echo "AddDefaultCharset UTF-8" >> /etc/apache2/conf-enabled/charset.conf
+
 # Instala o Composer globalmente
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
