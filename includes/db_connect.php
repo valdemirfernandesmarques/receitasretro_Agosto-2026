@@ -1,13 +1,14 @@
 <?php
 // Configurações de conexão com o banco de dados
-$host = 'receitas_retro.mysql.dbaas.com.br';             // Host do banco (normalmente localhost)
-$dbname = 'receitas_retro';       // Nome do banco de dados
-$user = 'receitas_retro';                  // Usuário do banco de dados (ex: root no WampServer)
-$password = 'Receitas@12';                  // Senha do banco (em branco por padrão no WampServer)
+$host     = getenv('DB_HOST') ?: 'b8wru79itthvwibb49hs-mysql.services.clever-cloud.com';
+$dbname   = getenv('DB_NAME') ?: 'b8wru79itthvwibb49hs';
+$user     = getenv('DB_USER') ?: 'uatrkaejrrhqpjnk';
+$password = getenv('DB_PASS') ?: 'DrBXMENnZTaHi8nAiekH';
+$port     = getenv('DB_PORT') ?: '3306';
 
 // Criando conexão com PDO
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $password);
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $user, $password);
     // Configura o modo de erro para exceções
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Habilita uso de prepared statements seguros

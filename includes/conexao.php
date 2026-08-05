@@ -1,11 +1,12 @@
 <?php
-$servername = "receitas_retro.mysql.dbaas.com.br";
-$username = "receitas_retro";
-$password = "Receitas@12";
-$dbname = "receitas_retro";
+$servername = getenv('DB_HOST') ?: "b8wru79itthvwibb49hs-mysql.services.clever-cloud.com";
+$username   = getenv('DB_USER') ?: "uatrkaejrrhqpjnk";
+$password   = getenv('DB_PASS') ?: "DrBXMENnZTaHi8nAiekH";
+$dbname     = getenv('DB_NAME') ?: "b8wru79itthvwibb49hs";
+$port       = getenv('DB_PORT') ?: 3306;
 
 // Criar conexão
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
 // Checar conexão
 if ($conn->connect_error) {

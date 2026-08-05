@@ -1,20 +1,14 @@
 <?php
-$host = 'receitas_retro.mysql.dbaas.com.br';
-$dbname = 'receitas_retro';
-$user = 'receitas_retro';
-$pass = 'Receitas@12';
+$host   = getenv('DB_HOST') ?: 'b8wru79itthvwibb49hs-mysql.services.clever-cloud.com';
+$dbname = getenv('DB_NAME') ?: 'b8wru79itthvwibb49hs';
+$user   = getenv('DB_USER') ?: 'uatrkaejrrhqpjnk';
+$pass   = getenv('DB_PASS') ?: 'DrBXMENnZTaHi8nAiekH';
+$port   = getenv('DB_PORT') ?: '3306';
 
 try {
-    // Conecta ao MySQL
-    $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $user, $pass);
+    // Conecta diretamente ao banco de dados alocado na Clever Cloud
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Cria o banco se não existir
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS $dbname CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    //echo "Banco de dados verificado/criado com sucesso.<br>";
-
-    // Usa o banco
-    $pdo->exec("USE $dbname");
 
     // Cria tabela usuarios
     $pdo->exec("
@@ -106,8 +100,6 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 
-    //echo "Tabelas criadas/verificadas com sucesso.<br>";
-
     // Insere categorias padrão
     $categorias = ['Vegetarianas', 'Veganas', 'Salgados', 'Massas', 'Pães', 'Bolos', 'Doces'];
     foreach ($categorias as $cat) {
@@ -118,26 +110,23 @@ try {
             $stmt->execute([$cat]);
         }
     }
-    //echo "Categorias inseridas/verificadas com sucesso.<br>";
 
     // Insere administrador padrão se não existir
     $emailAdmin = 'admin@retro.com';
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
     $stmt->execute([$emailAdmin]);
-                                    // Hash BCRYPT da senha antiga:$2y$10$halE40oGVmk4DEZehBMWTOSbF4/cD/B8STpR.gA8CatHD50y.5MHO (123456)
+
     if ($stmt->fetchColumn() == 0) {
-        $senhaHash = '$2y$10$halE40oGVmk4DEZehBMWTOSbF4/cD/B8STpR.gA8CatHD50y.5MHO'; // senha: administrador@75
+        $senhaHash = '$2y$10$halE40oGVmk4DEZehBMWTOSbF4/cD/B8STpR.gA8CatHD50y.5MHO';
         $stmt = $pdo->prepare("
             INSERT INTO usuarios (nome, email, telefone, senha, tipo, ativo, status, criado_em)
             VALUES ('Administrador', ?, '(48)99685-9855', ?, 'admin', 1, 'liberado', NOW())
         ");
         $stmt->execute([$emailAdmin, $senhaHash]);
         echo "Usuário administrador criado com sucesso.<br>";
-    } else {
-        //echo "Usuário administrador já existe.<br>";
     }
 
 } catch (PDOException $e) {
-    die("Erro ao criar banco: " . $e->getMessage());
+    die("Erro ao configurar banco: " . $e->getMessage());
 }
 ?>
