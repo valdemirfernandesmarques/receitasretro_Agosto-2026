@@ -1,6 +1,7 @@
- <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+<?php
+// Silencia e previne erro de session_start caso a sessão já tenha sido enviada ou iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    @session_start();
 }
 
 // Função para capturar o nome do arquivo da página atual
@@ -20,30 +21,7 @@ $currentPage = getCurrentPageName();
   <!-- Font Awesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- script global do Google AdSense(para ganhar com propagandas)-->
-
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8534248567406604" -->
-    <!-- crossorigin="anonymous"></script> -->
- 
-    <!-- script global do Google AdSense(para ganhar com propagandas: blocos)-->
-    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8534248567406604" -->
-    <!-- crossorigin="anonymous"></script> -->
-<!-- Anuncio_Topo_Site -->
-<!-- <ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-8534248567406604"
-     data-ad-slot="7546245038"
-     data-ad-format="auto"
-     data-full-width-responsive="true"></ins> -->
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-
-
-  
   <!-- CSS principal -->
-  <!--<link rel="stylesheet" href="/assets/css/style.css"> -->
   <link rel="stylesheet" href="/assets/css/header.css"> 
   <link rel="stylesheet" href="/assets/css/footer.css">
 
@@ -62,10 +40,9 @@ $currentPage = getCurrentPageName();
       'ver_receita.php' => 'ver_receita.css',
       'ver_receita02.php' => 'ver_receita02.css',
       'ver_receita03.php' => 'ver_receita03.css',
-       'ver_receita04.php' => 'ver_receita04.css',
+      'ver_receita04.php' => 'ver_receita04.css',
       'politica_privacidade.php' => 'politica_privacidade.css',
       'recuperar_senha.php' => 'recuperar_senha.css'
-      
   ];
 
   if (array_key_exists($currentPage, $cssMap)) {
@@ -78,18 +55,18 @@ $currentPage = getCurrentPageName();
 
 <!-- INÍCIO DO CABEÇALHO -->
 <header class="site-header">
-  <nav class="navbar"> <!--  <nav class="navbar" role="navigation" aria-label="Menu principal">   -->
+  <nav class="navbar">
     
     <!-- Logo do site -->
     <div class="logo">
-      <a href="index.php">
+      <a href="/index.php">
         <img src="/assets/img/receitas-retro-logo.jpeg" alt="Receitas Retrô">
       </a>
     </div>
 
     <!-- Barra de pesquisa -->
-    <div class="search-bar"> <!-- role="search">-->
-      <form action="/paginas/buscar.php" method="GET"> <!-- aria-label="Buscar receitas no site"> -->
+    <div class="search-bar">
+      <form action="/paginas/buscar.php" method="GET">
         <input type="text" name="q" placeholder="Buscar receitas..." required>
         <button type="submit"><i class="fas fa-search"></i></button>
       </form>
@@ -126,9 +103,6 @@ $currentPage = getCurrentPageName();
         <li><a href="/paginas/cadastro.php">Cadastrar</a></li>
       <?php endif; ?>
     </ul>
-
-    <!-- Menu toggle para mobile (será ativado via JavaScript se desejar no futuro) -->
-    <!-- <button class="menu-toggle" onclick="document.querySelector('.menu').classList.toggle('active')">☰</button> -->
 
   </nav>
 </header>
