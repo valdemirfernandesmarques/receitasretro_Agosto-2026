@@ -1,28 +1,16 @@
 <?php
-// Define explicitamente o cabeçalho HTTP em UTF-8 antes de qualquer envio de saída
 header('Content-Type: text/html; charset=utf-8');
 
-// Inicia a sessão se ainda não tiver sido iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Inclui o arquivo de conexão com o banco de dados.
 include_once '../includes/conexao.php';
-
-// Garante que a conexão MySQLi utilize a codificação UTF-8 correta
-if (isset($conn) && $conn instanceof mysqli) {
-    $conn->set_charset("utf8mb4");
-}
-
-// Inclui o cabeçalho da página
 include_once '../includes/header.php';
 
-// --- Lógica para buscar e exibir receitas por categoria ---
 if (isset($_GET['cat'])) {
     $categoria = $_GET['cat'];
 
-    // Prepara consulta para obter o ID da categoria
     $stmtCategoria = $conn->prepare("SELECT id FROM categorias WHERE nome = ?");
     $stmtCategoria->bind_param("s", $categoria);
     $stmtCategoria->execute();
@@ -32,7 +20,6 @@ if (isset($_GET['cat'])) {
         $categoriaRow = $resultCategoria->fetch_assoc();
         $categoriaId = $categoriaRow['id'];
 
-        // Consulta receitas liberadas associadas à categoria
         $stmtReceitas = $conn->prepare("SELECT r.*, u.nome AS autor_nome 
                                          FROM receitas r 
                                          JOIN usuarios u ON r.usuario_id = u.id 
@@ -62,19 +49,24 @@ if (isset($_GET['cat'])) {
 
         <?php 
         while ($receita = $resultReceitas->fetch_assoc()) { 
+            // Aplica a correção de codificação nos dados vindos do banco
+            $titulo = corrigir_texto($receita['titulo']);
+            $autor  = corrigir_texto($receita['autor_nome']);
+            $ingredientes_raw = corrigir_texto($receita['ingredientes']);
+            $preparo_raw      = corrigir_texto($receita['modo_preparo']);
         ?>
             <fieldset class="card-receita">
                 <legend class="receita-titulo">
-                    <?php echo htmlspecialchars($receita['titulo'], ENT_QUOTES, 'UTF-8'); ?>
+                    <?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?>
                 </legend>
                 
                 <p class="autor-receita">
-                    Escrito por: <strong><?php echo htmlspecialchars($receita['autor_nome'], ENT_QUOTES, 'UTF-8'); ?></strong><br>
+                    Escrito por: <strong><?php echo htmlspecialchars($autor, ENT_QUOTES, 'UTF-8'); ?></strong><br>
                     Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
                 </p>
 
                 <img src="<?php echo htmlspecialchars($receita['imagem'], ENT_QUOTES, 'UTF-8'); ?>" 
-                     alt="Imagem da receita <?php echo htmlspecialchars($receita['titulo'], ENT_QUOTES, 'UTF-8'); ?>">
+                     alt="Imagem da receita <?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?>">
 
                 <section class="receita-conteudo">
                     
@@ -82,7 +74,7 @@ if (isset($_GET['cat'])) {
                         <h4>Ingredientes</h4>
                         <ul class="lista-ingredientes">
                             <?php
-                            $ingredientes = explode("\n", $receita['ingredientes']);
+                            $ingredientes = explode("\n", $ingredientes_raw);
                             foreach ($ingredientes as $item) {
                                 $itemLimpo = trim($item);
                                 if (!empty($itemLimpo)) {
@@ -97,7 +89,7 @@ if (isset($_GET['cat'])) {
                         <h4>Modo de Preparo</h4>
                         <ol class="lista-preparo">
                             <?php
-                            $preparo = explode("\n", $receita['modo_preparo']);
+                            $preparo = explode("\n", $preparo_raw);
                             foreach ($preparo as $passo) {
                                 $passoLimpo = trim($passo);
                                 if (!empty($passoLimpo)) {
@@ -110,7 +102,7 @@ if (isset($_GET['cat'])) {
                 </section>
 
             </fieldset>
-        <?php } // Fim do loop while ?>
+        <?php } ?>
 
     </div>
     
