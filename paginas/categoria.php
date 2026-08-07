@@ -8,6 +8,28 @@ if (session_status() === PHP_SESSION_NONE) {
 include_once '../includes/conexao.php';
 include_once '../includes/header.php';
 
+// Função de segurança/fallback para checar e formatar o caminho da imagem
+function obter_caminho_imagem($caminho_banco) {
+    if (empty($caminho_banco)) {
+        return '../assets/img/sem-foto.jpg'; // Imagem padrão caso não exista
+    }
+
+    // Normaliza o caminho para exibição na pasta atual
+    $caminho_normalizado = $caminho_banco;
+    if (strpos($caminho_banco, '../') === 0) {
+        $caminho_normalizado = $caminho_banco;
+    } else if (strpos($caminho_banco, 'uploads/') === 0) {
+        $caminho_normalizado = '../' . $caminho_banco;
+    }
+
+    // Se o Render tiver limpado o arquivo do disco, retorna imagem fallback
+    if (!file_exists($caminho_normalizado)) {
+        return 'https://via.placeholder.com/400x300?text=Imagem+Indispon%C3%ADvel';
+    }
+
+    return $caminho_normalizado;
+}
+
 if (isset($_GET['cat'])) {
     $categoria = $_GET['cat'];
 
@@ -50,10 +72,12 @@ if (isset($_GET['cat'])) {
         <?php 
         while ($receita = $resultReceitas->fetch_assoc()) { 
             // Aplica a correção de codificação nos dados vindos do banco
-            $titulo = corrigir_texto($receita['titulo']);
-            $autor  = corrigir_texto($receita['autor_nome']);
-            $ingredientes_raw = corrigir_texto($receita['ingredientes']);
-            $preparo_raw      = corrigir_texto($receita['modo_preparo']);
+            $titulo = function_exists('corrigir_texto') ? corrigir_texto($receita['titulo']) : $receita['titulo'];
+            $autor  = function_exists('corrigir_texto') ? corrigir_texto($receita['autor_nome']) : $receita['autor_nome'];
+            $ingredientes_raw = function_exists('corrigir_texto') ? corrigir_texto($receita['ingredientes']) : $receita['ingredientes'];
+            $preparo_raw      = function_exists('corrigir_texto') ? corrigir_texto($receita['modo_preparo']) : $receita['modo_preparo'];
+            
+            $src_imagem = obter_caminho_imagem($receita['imagem']);
         ?>
             <fieldset class="card-receita">
                 <legend class="receita-titulo">
@@ -65,8 +89,9 @@ if (isset($_GET['cat'])) {
                     Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
                 </p>
 
-                <img src="<?php echo htmlspecialchars($receita['imagem'], ENT_QUOTES, 'UTF-8'); ?>" 
-                     alt="Imagem da receita <?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?>">
+                <img src="<?php echo htmlspecialchars($src_imagem, ENT_QUOTES, 'UTF-8'); ?>" 
+                     alt="Imagem da receita <?php echo htmlspecialchars($titulo, ENT_QUOTES, 'UTF-8'); ?>"
+                     style="max-width: 100%; height: auto; object-fit: cover;">
 
                 <section class="receita-conteudo">
                     
@@ -74,7 +99,7 @@ if (isset($_GET['cat'])) {
                         <h4>Ingredientes</h4>
                         <ul class="lista-ingredientes">
                             <?php
-                            $ingredientes = explode("\n", $ingredientes_raw);
+                            $ingredientes = explode("\n", str_replace("\r", "", $ingredientes_raw));
                             foreach ($ingredientes as $item) {
                                 $itemLimpo = trim($item);
                                 if (!empty($itemLimpo)) {
@@ -89,7 +114,7 @@ if (isset($_GET['cat'])) {
                         <h4>Modo de Preparo</h4>
                         <ol class="lista-preparo">
                             <?php
-                            $preparo = explode("\n", $preparo_raw);
+                            $preparo = explode("\n", str_replace("\r", "", $preparo_raw));
                             foreach ($preparo as $passo) {
                                 $passoLimpo = trim($passo);
                                 if (!empty($passoLimpo)) {
