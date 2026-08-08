@@ -1,89 +1,101 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+session_start();
+
+// Inclui o arquivo de conexão com o banco de dados.
+include_once '../includes/conexao.php';
+
+// Inclui o cabeçalho da página.
+include_once '../includes/header.php';
+
+// --- Lógica para buscar e exibir receitas por categoria ---
+if (isset($_GET['cat'])) {
+    $categoria = $_GET['cat'];
+
+    $stmtCategoria = $conn->prepare("SELECT id FROM categorias WHERE nome = ?");
+    $stmtCategoria->bind_param("s", $categoria);
+    $stmtCategoria->execute();
+    $resultCategoria = $stmtCategoria->get_result();
+
+    if ($resultCategoria->num_rows > 0) {
+        $categoriaRow = $resultCategoria->fetch_assoc();
+        $categoriaId = $categoriaRow['id'];
+
+        $stmtReceitas = $conn->prepare("SELECT r.*, u.nome AS autor_nome 
+                                         FROM receitas r 
+                                         JOIN usuarios u ON r.usuario_id = u.id 
+                                         WHERE r.categoria_id = ? AND r.status = 'liberado'");
+        $stmtReceitas->bind_param("i", $categoriaId);
+        $stmtReceitas->execute();
+        $resultReceitas = $stmtReceitas->get_result();
+
+    } else {
+        echo "<p style='padding:20px;'>Categoria não encontrada.</p>";
+        exit;
+    }
+} else {
+    echo "<p style='padding:20px;'>Categoria não especificada.</p>";
+    exit;
 }
-
-require_once '../includes/conexao.php';
-
-// Aceita tanto ?id=X quanto ?categoria_id=X da URL
-$id = 0;
-if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-} elseif (isset($_GET['categoria_id'])) {
-    $id = intval($_GET['categoria_id']);
-}
-
-// Se não houver ID válido na URL, redireciona para a home
-if ($id <= 0) {
-    header("Location: ../index.php");
-    exit();
-}
-
-// Busca o nome da categoria no banco de dados
-$stmt_cat = $conn->prepare("SELECT nome FROM categorias WHERE id = ?");
-$stmt_cat->bind_param("i", $id);
-$stmt_cat->execute();
-$res_cat = $stmt_cat->get_result();
-
-if ($res_cat->num_rows === 0) {
-    // Se o ID não for encontrado no banco de dados, encerra com aviso em vez de redirecionar
-    include_once('../includes/header.php');
-    echo "<main class='conteudo-principal'><p>Categoria não encontrada.</p></main>";
-    include_once('../includes/footer.php');
-    exit();
-}
-
-$categoria = $res_cat->fetch_assoc();
-$stmt_cat->close();
-
-// Busca as receitas pertencentes a essa categoria
-$stmt_rec = $conn->prepare("SELECT id, titulo, descricao, imagem FROM receitas WHERE categoria_id = ? ORDER BY id DESC");
-$stmt_rec->bind_param("i", $id);
-$stmt_rec->execute();
-$receitas = $stmt_rec->get_result();
-
-include_once('../includes/header.php');
 ?>
 
-<main class="conteudo-principal">
-    <h2>Receitas da Categoria: <?php echo htmlspecialchars($categoria['nome']); ?></h2>
+<body>
+<main class="container pagina-categoria">
+    
+    <h2 class="titulo-categoria">Receitas: <?php echo htmlspecialchars(ucfirst($categoria)); ?></h2>
 
-    <div class="lista-receitas">
-        <?php if ($receitas->num_rows > 0): ?>
-            <?php while ($receita = $receitas->fetch_assoc()): ?>
-                <div class="card-receita">
-                    <?php 
-                    // Tratamento dinâmico para URLs do Cloudinary vs Imagens locais
-                    $imagem_src = "../imagens/sem-foto.jpg"; // Imagem padrão
+    <div class="grid-receitas">
+
+        <?php 
+        while ($receita = $resultReceitas->fetch_assoc()) { 
+        ?>
+            <fieldset class="card-receita">
+                <legend class="receita-titulo">
+                    <?php echo htmlspecialchars($receita['titulo']); ?>
+                </legend>
+                
+                <p class="autor-receita">
+                    Escrito por: <strong><?php echo htmlspecialchars($receita['autor_nome']); ?></strong><br>
+                    Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
+                </p>
+
+                <img src="<?php echo htmlspecialchars($receita['imagem']); ?>" 
+                     alt="Imagem da receita <?php echo htmlspecialchars($receita['titulo']); ?>">
+
+                <section class="receita-conteudo">
                     
-                    if (!empty($receita['imagem'])) {
-                        if (strpos($receita['imagem'], 'http') === 0) {
-                            // Imagem salva no Cloudinary
-                            $imagem_src = $receita['imagem'];
-                        } else {
-                            // Imagem salva no servidor local
-                            $caminho_local = "../" . ltrim(str_replace('../', '', $receita['imagem']), '/');
-                            if (file_exists($caminho_local)) {
-                                $imagem_src = $caminho_local;
+                    <div class="receita-bloco">
+                        <h4>Ingredientes</h4>
+                        <ul class="lista-ingredientes">
+                            <?php
+                            $ingredientes = explode("\n", $receita['ingredientes']);
+                            foreach ($ingredientes as $item) {
+                                echo "<li>" . htmlspecialchars(trim($item)) . "</li>";
                             }
-                        }
-                    }
-                    ?>
-                    <img src="<?php echo htmlspecialchars($imagem_src); ?>" alt="<?php echo htmlspecialchars($receita['titulo']); ?>" class="img-receita">
-                    
-                    <h3><?php echo htmlspecialchars($receita['titulo']); ?></h3>
-                    <p><?php echo htmlspecialchars($receita['descricao']); ?></p>
-                    <a href="receita.php?id=<?php echo $receita['id']; ?>" class="btn-detalhes">Ver Receita</a>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>Nenhuma receita encontrada para esta categoria.</p>
-        <?php endif; ?>
-    </div>
-</main>
+                            ?>
+                        </ul>
+                    </div>
 
-<?php 
-$stmt_rec->close();
-$conn->close();
-include_once('../includes/footer.php'); 
+                    <div class="receita-bloco">
+                        <h4>Modo de Preparo</h4>
+                        <ol class="lista-preparo">
+                            <?php
+                            $preparo = explode("\n", $receita['modo_preparo']);
+                            foreach ($preparo as $passo) {
+                                echo "<li>" . htmlspecialchars(trim($passo)) . "</li>";
+                            }
+                            ?>
+                        </ol>
+                    </div>
+                </section>
+
+            </fieldset>
+        <?php } // Fim do loop while ?>
+
+    </div>
+
+</main>
+    
+</body>
+<?php
+include_once('../includes/footer.php');
 ?>
