@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Tipo de arquivo não permitido.");
         }
 
-        // Faz o upload para a nuvem (Cloudinary) e obtém a URL segura (https://...)
+        // Faz o upload para a nuvem (Cloudinary) e obtém a URL segura
         $url_cloudinary = upload_para_cloudinary($_FILES['imagem']['tmp_name']);
 
         if ($url_cloudinary) {
@@ -123,7 +123,7 @@ include_once('../includes/header.php');
             <input type="text" name="descricao" id="descricao" placeholder="Uma breve descrição da receita..." required><br><br>
 
             <label for="ingredientes">Ingredientes:</label><br>
-            <input name="ingredientes" id="ingredientes" rows="5" required></input><br><br>
+            <textarea name="ingredientes" id="ingredientes" rows="5" required></textarea><br><br>
 
             <label for="modo_preparo">Modo de Preparo:</label><br>
             <textarea name="modo_preparo" id="modo_preparo" rows="6" required></textarea><br><br>

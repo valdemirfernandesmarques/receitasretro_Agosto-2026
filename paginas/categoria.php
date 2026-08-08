@@ -5,22 +5,31 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once '../includes/conexao.php';
 
-// Obtém o ID da categoria da URL
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// Aceita tanto ?id=X quanto ?categoria_id=X da URL
+$id = 0;
+if (isset($_GET['id'])) {
+    $id = intval($_GET['id']);
+} elseif (isset($_GET['categoria_id'])) {
+    $id = intval($_GET['categoria_id']);
+}
 
+// Se não houver ID válido na URL, redireciona para a home
 if ($id <= 0) {
     header("Location: ../index.php");
     exit();
 }
 
-// Busca o nome da categoria
+// Busca o nome da categoria no banco de dados
 $stmt_cat = $conn->prepare("SELECT nome FROM categorias WHERE id = ?");
 $stmt_cat->bind_param("i", $id);
 $stmt_cat->execute();
 $res_cat = $stmt_cat->get_result();
 
 if ($res_cat->num_rows === 0) {
-    header("Location: ../index.php");
+    // Se o ID não for encontrado no banco de dados, encerra com aviso em vez de redirecionar
+    include_once('../includes/header.php');
+    echo "<main class='conteudo-principal'><p>Categoria não encontrada.</p></main>";
+    include_once('../includes/footer.php');
     exit();
 }
 
