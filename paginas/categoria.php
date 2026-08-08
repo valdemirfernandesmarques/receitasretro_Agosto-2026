@@ -10,14 +10,21 @@ if (isset($conn) && $conn instanceof mysqli) {
 }
 
 /**
- * Converte e limpa qualquer texto prevenindo dupla codificação
+ * Repara textos antigos com dupla codificação UTF-8 e exibe com segurança.
  */
-function exibir_texto_utf8($texto) {
+function exibir_texto_limpo($texto) {
     if (empty($texto)) return '';
-    // Decodifica entidades anteriores (caso o banco tenha registros com &atilde;, &ccedil;)
-    $decodificado = html_entity_decode($texto, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    // Aplica a sanitização final em UTF-8 nativo
-    return htmlspecialchars($decodificado, ENT_QUOTES, 'UTF-8');
+    
+    // 1. Decodifica entidades HTML antigas (ex: &atilde;, &ccedil;)
+    $texto = html_entity_decode($texto, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    
+    // 2. Detecta e repara Mojibake/dupla codificação UTF-8 comum nas receitas antigas
+    if (preg_match('/[\xC2\xC3][\x80-\xBF]/', $texto)) {
+        $texto = utf8_decode($texto);
+    }
+    
+    // 3. Converte para exibição HTML segura
+    return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 }
 
 include_once '../includes/header.php';
@@ -37,7 +44,8 @@ if (isset($_GET['cat'])) {
         $stmtReceitas = $conn->prepare("SELECT r.*, u.nome AS autor_nome 
                                          FROM receitas r 
                                          JOIN usuarios u ON r.usuario_id = u.id 
-                                         WHERE r.categoria_id = ? AND r.status = 'liberado'");
+                                         WHERE r.categoria_id = ? AND r.status = 'liberado'
+                                         ORDER BY r.criado_em DESC");
         $stmtReceitas->bind_param("i", $categoriaId);
         $stmtReceitas->execute();
         $resultReceitas = $stmtReceitas->get_result();
@@ -55,7 +63,7 @@ if (isset($_GET['cat'])) {
 <body>
 <main class="container pagina-categoria">
     
-    <h2 class="titulo-categoria">Receitas: <?php echo exibir_texto_utf8(ucfirst($categoria)); ?></h2>
+    <h2 class="titulo-categoria">Receitas: <?php echo exibir_texto_limpo(ucfirst($categoria)); ?></h2>
 
     <div class="grid-receitas">
 
@@ -64,16 +72,16 @@ if (isset($_GET['cat'])) {
         ?>
             <fieldset class="card-receita">
                 <legend class="receita-titulo">
-                    <?php echo exibir_texto_utf8($receita['titulo']); ?>
+                    <?php echo exibir_texto_limpo($receita['titulo']); ?>
                 </legend>
                 
                 <p class="autor-receita">
-                    Escrito por: <strong><?php echo exibir_texto_utf8($receita['autor_nome']); ?></strong><br>
+                    Escrito por: <strong><?php echo exibir_texto_limpo($receita['autor_nome']); ?></strong><br>
                     Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
                 </p>
 
-                <img src="<?php echo exibir_texto_utf8($receita['imagem']); ?>" 
-                     alt="Imagem da receita <?php echo exibir_texto_utf8($receita['titulo']); ?>">
+                <img src="<?php echo exibir_texto_limpo($receita['imagem']); ?>" 
+                     alt="Imagem da receita <?php echo exibir_texto_limpo($receita['titulo']); ?>">
 
                 <section class="receita-conteudo">
                     
@@ -85,7 +93,7 @@ if (isset($_GET['cat'])) {
                             foreach ($ingredientes as $item) {
                                 $item_limpo = trim($item);
                                 if (!empty($item_limpo)) {
-                                    echo "<li>" . exibir_texto_utf8($item_limpo) . "</li>";
+                                    echo "<li>" . exibir_texto_limpo($item_limpo) . "</li>";
                                 }
                             }
                             ?>
@@ -100,7 +108,7 @@ if (isset($_GET['cat'])) {
                             foreach ($preparo as $passo) {
                                 $passo_limpo = trim($passo);
                                 if (!empty($passo_limpo)) {
-                                    echo "<li>" . exibir_texto_utf8($passo_limpo) . "</li>";
+                                    echo "<li>" . exibir_texto_limpo($passo_limpo) . "</li>";
                                 }
                             }
                             ?>

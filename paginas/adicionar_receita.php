@@ -19,17 +19,17 @@ if (isset($_SESSION["usuario_status"]) && $_SESSION["usuario_status"] !== "liber
     exit();
 }
 
-// Função para tratar quebras de linha e sujeiras de texto sem alterar os acentos
+// Limpa sujeiras do texto (como palavras de checkbox 'check', 'uncheck')
 function limpar_entrada_texto($texto) {
     if (empty($texto)) return '';
     
-    // 1. Remove palavras residuais de checkboxes do site de origem (check, uncheck, etc)
-    $texto = preg_replace('/(check|uncheck)/i', '', $texto);
+    // 1. Remove termos de checkbox comuns em cópias da web
+    $texto = preg_replace('/\b(check|uncheck)\b/i', '', $texto);
     
     // 2. Normaliza quebras de linha
     $texto = str_replace(array("\r\n", "\r"), "\n", $texto);
     
-    // 3. Limpa linhas consecutivas e espaços
+    // 3. Remove linhas em branco extras
     $linhas = explode("\n", $texto);
     $linhas_limpas = array();
     
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modo_preparo_bruto = $_POST["modo_preparo"] ?? '';
     $descricao_bruta = isset($_POST["descricao"]) && !empty($_POST["descricao"]) ? $_POST["descricao"] : $titulo_bruto;
 
-    // Salva os textos em UTF-8 puro e limpo (sem htmlspecialchars no banco)
+    // Garante que o texto fique limpo e em UTF-8 puro no banco
     $titulo = trim($titulo_bruto);
     $descricao = trim($descricao_bruta);
     $ingredientes = limpar_entrada_texto($ingredientes_bruto);
