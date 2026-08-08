@@ -10,7 +10,7 @@ if (isset($conn) && $conn instanceof mysqli) {
 }
 
 /**
- * Repara textos antigos com dupla codificação UTF-8 e exibe com segurança.
+ * Trata textos com codificação antiga sem usar funções descontinuadas (deprecated)
  */
 function exibir_texto_limpo($texto) {
     if (empty($texto)) return '';
@@ -18,12 +18,12 @@ function exibir_texto_limpo($texto) {
     // 1. Decodifica entidades HTML antigas (ex: &atilde;, &ccedil;)
     $texto = html_entity_decode($texto, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     
-    // 2. Detecta e repara Mojibake/dupla codificação UTF-8 comum nas receitas antigas
+    // 2. Detecta e repara caracteres corrompidos antigos usando mbstring moderna
     if (preg_match('/[\xC2\xC3][\x80-\xBF]/', $texto)) {
-        $texto = utf8_decode($texto);
+        $texto = mb_convert_encoding($texto, 'ISO-8859-1', 'UTF-8');
     }
     
-    // 3. Converte para exibição HTML segura
+    // 3. Retorna a string pronta para exibição HTML em UTF-8
     return htmlspecialchars($texto, ENT_QUOTES, 'UTF-8');
 }
 
