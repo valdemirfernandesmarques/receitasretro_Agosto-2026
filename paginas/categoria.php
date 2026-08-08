@@ -2,7 +2,8 @@
 header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
-require_once '../conexao.php'; // Ajuste o caminho se necessário
+// Caminho corrigido para a pasta includes/
+require_once '../includes/conexao.php';
 
 /**
  * Função para tratar e formatar strings garantindo UTF-8 correto
@@ -22,18 +23,28 @@ $categoria = null;
 $receitas = [];
 
 if ($categoria_id) {
-    try {
-        // Buscar informações da categoria
-        $stmtCat = $pdo->prepare("SELECT * FROM categorias WHERE id = :id");
-        $stmtCat->execute([':id' => $categoria_id]);
-        $categoria = $stmtCat->fetch();
+    // Buscar informações da categoria (Usando MySQLi)
+    $stmtCat = $conn->prepare("SELECT * FROM categorias WHERE id = ?");
+    if ($stmtCat) {
+        $stmtCat->bind_param("i", $categoria_id);
+        $stmtCat->execute();
+        $resCat = $stmtCat->get_result();
+        $categoria = $resCat->fetch_assoc();
+        $stmtCat->close();
+    }
 
-        // Buscar receitas pertencentes a essa categoria
-        $stmtRec = $pdo->prepare("SELECT * FROM receitas WHERE categoria_id = :id ORDER BY id DESC");
-        $stmtRec->execute([':id' => $categoria_id]);
-        $receitas = $stmtRec->fetchAll();
-    } catch (PDOException $e) {
-        $erro = "Erro ao buscar dados: " . $e->getMessage();
+    // Buscar receitas pertencentes a essa categoria (Usando MySQLi)
+    if ($categoria) {
+        $stmtRec = $conn->prepare("SELECT * FROM receitas WHERE categoria_id = ? ORDER BY id DESC");
+        if ($stmtRec) {
+            $stmtRec->bind_param("i", $categoria_id);
+            $stmtRec->execute();
+            $resRec = $stmtRec->get_result();
+            while ($row = $resRec->fetch_assoc()) {
+                $receitas[] = $row;
+            }
+            $stmtRec->close();
+        }
     }
 }
 ?>

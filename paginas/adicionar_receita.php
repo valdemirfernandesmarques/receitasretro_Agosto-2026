@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modo_preparo_linhas = array_map('trim', explode("\n", $modo_preparo_limpo));
     $modo_preparo = implode("\n", array_filter($modo_preparo_linhas, 'strlen'));
 
-    // Salva o texto limpo e direto em UTF-8 (Sem htmlspecialchars no banco)
+    // Salva o texto limpo e direto em UTF-8
     $titulo = trim($titulo_bruto);
 
     $categoria_id = isset($_POST["categoria_id"]) ? intval($_POST["categoria_id"]) : null;
