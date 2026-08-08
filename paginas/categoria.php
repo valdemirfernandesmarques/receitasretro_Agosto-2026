@@ -1,124 +1,145 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
-mb_internal_encoding('UTF-8');
+// Inicia a sessão (se ainda não estiver iniciada), embora não seja diretamente usada aqui, é uma boa prática
+session_start();
 
-require_once '../includes/conexao.php';
-include_once('../includes/header.php');
+// Inclui o arquivo de conexão com o banco de dados.
+// É essencial para estabelecer a comunicação com o MySQL.
+include_once '../includes/conexao.php';
 
-/**
- * Função auxiliar para garantir UTF-8 e evitar ataques XSS
- */
-function sanitizar_utf8($string) {
-    if ($string === null) {
-        return '';
+// Inclui o cabeçalho da página (contém tags <head>, abertura do <body>, etc.).
+// Isso ajuda a manter um layout consistente em todo o site.
+include_once '../includes/header.php';
+
+// --- Lógica para buscar e exibir receitas por categoria ---
+// Verifica se o parâmetro 'cat' (categoria) foi passado na URL via método GET.
+// Isso indica que o usuário está tentando visualizar receitas de uma categoria específica.
+if (isset($_GET['cat'])) {
+    // Pega o nome da categoria da URL e armazena na variável $categoria.
+    $categoria = $_GET['cat'];
+
+    // Prepara uma consulta SQL para obter o ID da categoria com base no nome.
+    // Usar prepared statements previne ataques de SQL Injection.
+    $stmtCategoria = $conn->prepare("SELECT id FROM categorias WHERE nome = ?");
+    // 's' indica que o parâmetro é uma string.
+    $stmtCategoria->bind_param("s", $categoria);
+    // Executa a consulta preparada.
+    $stmtCategoria->execute();
+    // Obtém o resultado da consulta.
+    $resultCategoria = $stmtCategoria->get_result();
+
+    // Verifica se alguma categoria foi encontrada com o nome fornecido.
+    if ($resultCategoria->num_rows > 0) {
+        // Se a categoria existe, obtém a linha de resultado (que contém o ID da categoria).
+        $categoriaRow = $resultCategoria->fetch_assoc();
+        // Armazena o ID da categoria.
+        $categoriaId = $categoriaRow['id'];
+
+        // --- CORREÇÃO IMPORTANTE APLICADA AQUI ---
+        // Prepara a consulta para buscar as receitas.
+        // Adiciona um JOIN com a tabela 'usuarios' para obter o nome do autor da receita.
+        // A CLÁUSULA 'AND r.status = 'liberado'' GARANTE QUE SOMENTE RECEITAS
+        // COM O STATUS 'liberado' SERÃO EXIBIDAS.
+        // Receitas com 'pendente' ou qualquer outro status não aparecerão para o usuário final.
+        $stmtReceitas = $conn->prepare("SELECT r.*, u.nome AS autor_nome 
+                                         FROM receitas r 
+                                         JOIN usuarios u ON r.usuario_id = u.id 
+                                         WHERE r.categoria_id = ? AND r.status = 'liberado'");
+        // 'i' indica que o parâmetro é um inteiro (o ID da categoria).
+        $stmtReceitas->bind_param("i", $categoriaId);
+        // Executa a consulta de receitas.
+        $stmtReceitas->execute();
+        // Obtém o resultado da consulta de receitas.
+        $resultReceitas = $stmtReceitas->get_result();
+
+    } else {
+        // Se nenhuma categoria for encontrada com o nome especificado.
+        echo "<p style='padding:20px;'>Categoria não encontrada.</p>";
+        // Termina a execução do script para evitar processamento desnecessário.
+        exit;
     }
-    if (!mb_check_encoding($string, 'UTF-8')) {
-        $string = mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
-    }
-    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-}
-
-// Captura o ID vindo da URL (ex: categoria.php?id=1)
-$categoria_id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
-$categoria = null;
-$receitas = [];
-$todas_categorias = [];
-
-if ($categoria_id) {
-    // 1. Busca os dados da categoria selecionada
-    $stmtCat = $conn->prepare("SELECT * FROM categorias WHERE id = ?");
-    if ($stmtCat) {
-        $stmtCat->bind_param("i", $categoria_id);
-        $stmtCat->execute();
-        $resCat = $stmtCat->get_result();
-        $categoria = $resCat->fetch_assoc();
-        $stmtCat->close();
-    }
-
-    // 2. Busca as receitas cadastradas nessa categoria
-    if ($categoria) {
-        $stmtRec = $conn->prepare("SELECT * FROM receitas WHERE categoria_id = ? ORDER BY id DESC");
-        if ($stmtRec) {
-            $stmtRec->bind_param("i", $categoria_id);
-            $stmtRec->execute();
-            $resRec = $stmtRec->get_result();
-            while ($row = $resRec->fetch_assoc()) {
-                $receitas[] = $row;
-            }
-            $stmtRec->close();
-        }
-    }
-}
-
-// Se nenhuma categoria foi selecionada via ID, carrega todas as categorias para a vitrine
-if (!$categoria) {
-    $resTodas = $conn->query("SELECT * FROM categorias ORDER BY id ASC");
-    if ($resTodas) {
-        while ($catRow = $resTodas->fetch_assoc()) {
-            $todas_categorias[] = $catRow;
-        }
-    }
+} else {
+    // Se o parâmetro 'cat' não foi passado na URL (URL incompleta).
+    echo "<p style='padding:20px;'>Categoria não especificada.</p>";
+    // Termina a execução do script.
+    exit;
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $categoria ? sanitizar_utf8($categoria['nome']) : 'Categorias de Receitas'; ?></title>
-</head>
-<body class="pagina-categoria">
-    <main style="max-width: 1200px; margin: 20px auto; padding: 0 15px;">
+<body>
+<main class="container pagina-categoria">
+    
+    <h2 class="titulo-categoria">Receitas: <?php echo htmlspecialchars(ucfirst($categoria)); ?></h2>
 
-        <?php if ($categoria): ?>
-            <!-- EXIBIÇÃO DA CATEGORIA SELECIONADA -->
-            <h1>Receitas de <?php echo sanitizar_utf8($categoria['nome']); ?></h1>
+    <div class="grid-receitas">
 
-            <?php if (!empty($categoria['descricao'])): ?>
-                <p><?php echo sanitizar_utf8($categoria['descricao']); ?></p>
-            <?php endif; ?>
+        <?php 
+        // Loop que itera sobre cada receita encontrada na consulta.
+        // fetch_assoc() busca a próxima linha do conjunto de resultados como um array associativo.
+        while ($receita = $resultReceitas->fetch_assoc()) { 
+        ?>
+            <fieldset class="card-receita">
+                <legend class="receita-titulo">
+                    <?php 
+                    // Exibe o título da receita, usando htmlspecialchars para prevenir XSS.
+                    echo htmlspecialchars($receita['titulo']); 
+                    ?>
+                </legend>
+                
+                <p class="autor-receita">
+                    Escrito por: <strong><?php echo htmlspecialchars($receita['autor_nome']); ?></strong><br>
+                    Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
+                </p>
 
-            <br>
+                <img src="<?php echo htmlspecialchars($receita['imagem']); ?>" 
+                     alt="Imagem da receita <?php echo htmlspecialchars($receita['titulo']); ?>">
 
-            <?php if (count($receitas) > 0): ?>
-                <div class="lista-receitas" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
-                    <?php foreach ($receitas as $receita): ?>
-                        <div class="card-receita" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
-                            <?php if (!empty($receita['imagem'])): ?>
-                                <img src="<?php echo sanitizar_utf8($receita['imagem']); ?>" alt="<?php echo sanitizar_utf8($receita['titulo']); ?>" style="width: 100%; height: 180px; object-fit: cover; border-radius: 5px;">
-                            <?php endif; ?>
-                            <h3><?php echo sanitizar_utf8($receita['titulo']); ?></h3>
-                            <p><strong>Ingredientes:</strong><br><?php echo nl2br(sanitizar_utf8($receita['ingredientes'])); ?></p>
-                            <p><strong>Modo de Preparo:</strong><br><?php echo nl2br(sanitizar_utf8($receita['modo_preparo'])); ?></p>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <p>Nenhuma receita cadastrada para esta categoria ainda.</p>
-            <?php endif; ?>
+                <section class="receita-conteudo">
+                    
+                    <div class="receita-bloco">
+                        <h4>Ingredientes</h4>
+                        <ul class="lista-ingredientes">
+                            <?php
+                            // Divide a string de ingredientes (armazenada com quebras de linha) em um array.
+                            $ingredientes = explode("\n", $receita['ingredientes']);
+                            // Itera sobre cada item do array de ingredientes e o exibe como um item de lista.
+                            foreach ($ingredientes as $item) {
+                                // trim() remove espaços em branco extras, htmlspecialchars previne XSS.
+                                echo "<li>" . htmlspecialchars(trim($item)) . "</li>";
+                            }
+                            ?>
+                        </ul>
+                    </div>
 
-            <p style="margin-top: 30px;">
-                <a href="categoria.php">&larr; Voltar para todas as categorias</a>
-            </p>
+                    <div class="receita-bloco">
+                        <h4>Modo de Preparo</h4>
+                        <ol class="lista-preparo">
+                            <?php
+                            // Divide a string do modo de preparo em um array.
+                            $preparo = explode("\n", $receita['modo_preparo']);
+                            // Itera sobre cada passo do preparo e o exibe como um item de lista ordenada.
+                            foreach ($preparo as $passo) {
+                                // trim() remove espaços em branco extras, htmlspecialchars previne XSS.
+                                echo "<li>" . htmlspecialchars(trim($passo)) . "</li>";
+                            }
+                            ?>
+                        </ol>
+                    </div>
+                </section>
 
-        <?php else: ?>
-            <!-- VITRINE DE TODAS AS CATEGORIAS (Quando acessa sem ?id=) -->
-            <h1>Categorias de Receitas</h1>
-            <p>Selecione uma categoria abaixo para visualizar as receitas:</p>
-            <br>
+                </fieldset>
+        <?php } // Fim do loop while ?>
 
-            <div class="grid-categorias" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
-                <?php foreach ($todas_categorias as $cat): ?>
-                    <a href="categoria.php?id=<?php echo $cat['id']; ?>" style="display: block; padding: 20px; background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; text-align: center;">
-                        <?php echo sanitizar_utf8($cat['nome']); ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-
-    </main>
+    </div>
+ <!------------------------------------------------------------------------->
+<!-- script global do Google AdSense(para ganhar com propagandas: blocos)-->
+     
+<!------------------------------------------------------------------------->
+    
+</main>
+    
 </body>
-</html>
-
-<?php include_once('../includes/footer.php'); ?>
+<?php
+// Inclui o rodapé da página (encerramento do body e html).
+// Ajuda a manter um layout consistente.
+include_once('../includes/footer.php');
+?>
