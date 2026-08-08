@@ -1,16 +1,6 @@
 <?php
 session_start();
-
-// Força o cabeçalho HTTP em UTF-8 no Render
-header('Content-Type: text/html; charset=utf-8');
-
 require_once '../includes/conexao.php';
-
-// Força a conexão MySQL a usar UTF-8
-if (isset($conn)) {
-    $conn->set_charset("utf8mb4");
-}
-
 include_once('../includes/header.php');
 
 // Verifica se o usuário está logado
@@ -27,12 +17,11 @@ if ($_SESSION["usuario_status"] !== "liberado") {
 
 // Se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Captura e força UTF-8 nas entradas brutas do formulário
-    $titulo_bruto = mb_convert_encoding($_POST["titulo"], 'UTF-8', 'UTF-8');
-    $ingredientes_bruto = mb_convert_encoding($_POST["ingredientes"], 'UTF-8', 'UTF-8');
-    $modo_preparo_bruto = mb_convert_encoding($_POST["modo_preparo"], 'UTF-8', 'UTF-8');
+    $titulo_bruto = $_POST["titulo"];
+    $ingredientes_bruto = $_POST["ingredientes"];
+    $modo_preparo_bruto = $_POST["modo_preparo"];
 
-    // --- INÍCIO DA LÓGICA DE LIMPEZA E NORMALIZAÇÃO ---
+    // --- LIMPEZA E NORMALIZAÇÃO DE TEXTO ---
     $ingredientes_normalizado = str_replace(array("\r\n", "\r"), "\n", $ingredientes_bruto);
     $modo_preparo_normalizado = str_replace(array("\r\n", "\r"), "\n", $modo_preparo_bruto);
 
@@ -45,82 +34,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modo_preparo_linhas = array_map('trim', explode("\n", $modo_preparo_limpo));
     $modo_preparo = implode("\n", array_filter($modo_preparo_linhas, 'strlen'));
 
+    // Salva o texto limpo e direto em UTF-8 (Sem htmlspecialchars no banco)
     $titulo = trim($titulo_bruto);
-    // --- FIM DA LÓGICA DE LIMPEZA E NORMALIZAÇÃO ---
 
     $categoria_id = isset($_POST["categoria_id"]) ? intval($_POST["categoria_id"]) : null;
     $usuario_id = $_SESSION["usuario_id"];
     $imagem_caminho = null;
 
-    // --- UPLOAD DA IMAGEM (CLOUDINARY) ---
+    // Upload da imagem
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
         $nomeOriginal = basename($_FILES['imagem']['name']);
-        $extensao = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
+        $tipo = $_FILES['imagem']['type'];
+        $extensao = pathinfo($nomeOriginal, PATHINFO_EXTENSION);
 
         $tiposPermitidos = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        if (!in_array($extensao, $tiposPermitidos)) {
+        if (!in_array(strtolower($extensao), $tiposPermitidos)) {
             die("Tipo de arquivo não permitido.");
         }
 
-        $tmpFilePath = $_FILES['imagem']['tmp_name'];
+        $nomeArquivo = uniqid("img_", true) . "." . $extensao;
+        $caminho = "../uploads/" . $nomeArquivo;
 
-        // --- CONFIGURAÇÃO DO CLOUDINARY ---
-        $cloudName = 'SEU_CLOUD_NAME';
-        $apiKey    = 'SUA_API_KEY';
-        $apiSecret = 'SEU_API_SECRET';
-
-        $timestamp = time();
-        $paramsToSign = "timestamp=" . $timestamp;
-        $signature = sha1($paramsToSign . $apiSecret);
-
-        $postData = [
-            'file' => new CURLFile($tmpFilePath),
-            'api_key' => $apiKey,
-            'timestamp' => $timestamp,
-            'signature' => $signature
-        ];
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.cloudinary.com/v1_1/{$cloudName}/image/upload");
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        $response = curl_exec($ch);
-        $err = curl_error($ch);
-        curl_close($ch);
-
-        $data = json_decode($response, true);
-
-        if (!$err && isset($data['secure_url'])) {
-            $imagem_caminho = $data['secure_url'];
-        } else {
-            if (!is_dir("../uploads")) {
-                mkdir("../uploads", 0755, true);
-            }
-            $nomeArquivo = uniqid("img_", true) . "." . $extensao;
-            $caminhoLocal = "../uploads/" . $nomeArquivo;
-
-            if (move_uploaded_file($tmpFilePath, $caminhoLocal)) {
-                $imagem_caminho = $caminhoLocal;
+        if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
+            $stmt_img = $conn->prepare("INSERT INTO imagens (nome, tipo, caminho) VALUES (?, ?, ?)");
+            $stmt_img->bind_param("sss", $nomeOriginal, $tipo, $caminho);
+            if ($stmt_img->execute()) {
+                $imagem_caminho = $caminho;
             } else {
-                die("Erro ao salvar imagem localmente ou no Cloudinary.");
+                die("Erro ao salvar imagem no banco de dados.");
             }
+            $stmt_img->close();
+        } else {
+            die("Erro ao mover o arquivo de imagem.");
         }
-
-        // Salva o registro na tabela de imagens
-        $tipo = $_FILES['imagem']['type'];
-        $stmt_img = $conn->prepare("INSERT INTO imagens (nome, tipo, caminho) VALUES (?, ?, ?)");
-        $stmt_img->bind_param("sss", $nomeOriginal, $tipo, $imagem_caminho);
-        $stmt_img->execute();
-        $stmt_img->close();
-
     } else {
         die("Nenhum arquivo enviado ou erro no upload.");
     }
 
-    // Inserção da receita no banco de dados
+    // Inserção da receita
     $stmt = $conn->prepare("INSERT INTO receitas (titulo, ingredientes, modo_preparo, imagem, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssii", $titulo, $ingredientes, $modo_preparo, $imagem_caminho, $categoria_id, $usuario_id);
 
@@ -138,7 +89,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <title>Adicionar Receita</title>
@@ -148,6 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>Adicionar Receita</h2>
     <form method="post" action="" enctype="multipart/form-data">
         <br>
+        <label for="categoria">Categoria:</label>
         <select name="categoria_id" required>
             <option value="">Selecione uma categoria</option>
             <option value="1">Vegetariana</option>
@@ -176,6 +127,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </form>
 </body>
-
 </html>
 <?php include_once('../includes/footer.php'); ?>
