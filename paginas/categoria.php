@@ -1,31 +1,32 @@
 <?php
 session_start();
 
-// Envia cabeçalho HTTP garantindo que o navegador interprete a página em UTF-8 no Render
+// Cabeçalho HTTP forçando UTF-8
 header('Content-Type: text/html; charset=utf-8');
 
-// Inclui o arquivo de conexão com o banco de dados.
+// Inclui a conexão
 include_once '../includes/conexao.php';
 
-// Força a conexão MySQL a usar UTF-8
 if (isset($conn)) {
     $conn->set_charset("utf8mb4");
 }
 
-// Inclui o cabeçalho da página.
 include_once '../includes/header.php';
 
-// Função utilitária para garantir que o texto esteja em UTF-8 válido e seguro para o htmlspecialchars
-function exibir_texto($texto) {
+// Função inteligente para corrigir tanto o texto antigo (Mojibake/Ã§) quanto o texto novo
+function corrigir_dupla_codificacao($texto) {
     if (empty($texto)) return '';
-    // Converte de ISO-8859-1 para UTF-8 apenas se o texto não for UTF-8 válido
-    if (!mb_check_encoding($texto, 'UTF-8')) {
-        $texto = mb_convert_encoding($texto, 'UTF-8', 'ISO-8859-1');
+    
+    // Se contiver sequências típicas de Mojibake (UTF-8 lido como Latin1)
+    if (preg_match('/[\xC2\xC3][\x80-\xBF]/', $texto)) {
+        $texto = utf8_decode($texto);
     }
+    
+    // Garante validação UTF-8 limpa
     return htmlspecialchars($texto, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
-// --- Lógica para buscar e exibir receitas por categoria ---
+// --- Lógica de busca ---
 if (isset($_GET['cat'])) {
     $categoria = $_GET['cat'];
 
@@ -51,15 +52,15 @@ if (isset($_GET['cat'])) {
         exit;
     }
 } else {
-    echo "<p style='padding:20px;'>Categoria não especificada.</p>";
-    exit;
+        echo "<p style='padding:20px;'>Categoria não especificada.</p>";
+        exit;
 }
 ?>
 
 <body>
 <main class="container pagina-categoria">
     
-    <h2 class="titulo-categoria">Receitas: <?php echo exibir_texto(ucfirst($categoria)); ?></h2>
+    <h2 class="titulo-categoria">Receitas: <?php echo corrigir_dupla_codificacao(ucfirst($categoria)); ?></h2>
 
     <div class="grid-receitas">
 
@@ -68,16 +69,16 @@ if (isset($_GET['cat'])) {
         ?>
             <fieldset class="card-receita">
                 <legend class="receita-titulo">
-                    <?php echo exibir_texto($receita['titulo']); ?>
+                    <?php echo corrigir_dupla_codificacao($receita['titulo']); ?>
                 </legend>
                 
                 <p class="autor-receita">
-                    Escrito por: <strong><?php echo exibir_texto($receita['autor_nome']); ?></strong><br>
+                    Escrito por: <strong><?php echo corrigir_dupla_codificacao($receita['autor_nome']); ?></strong><br>
                     Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
                 </p>
 
-                <img src="<?php echo exibir_texto($receita['imagem']); ?>" 
-                     alt="Imagem da receita <?php echo exibir_texto($receita['titulo']); ?>">
+                <img src="<?php echo htmlspecialchars($receita['imagem'], ENT_QUOTES, 'UTF-8'); ?>" 
+                     alt="Imagem da receita <?php echo corrigir_dupla_codificacao($receita['titulo']); ?>">
 
                 <section class="receita-conteudo">
                     
@@ -87,7 +88,7 @@ if (isset($_GET['cat'])) {
                             <?php
                             $ingredientes = explode("\n", $receita['ingredientes']);
                             foreach ($ingredientes as $item) {
-                                echo "<li>" . exibir_texto(trim($item)) . "</li>";
+                                echo "<li>" . corrigir_dupla_codificacao(trim($item)) . "</li>";
                             }
                             ?>
                         </ul>
@@ -99,7 +100,7 @@ if (isset($_GET['cat'])) {
                             <?php
                             $preparo = explode("\n", $receita['modo_preparo']);
                             foreach ($preparo as $passo) {
-                                echo "<li>" . exibir_texto(trim($passo)) . "</li>";
+                                echo "<li>" . corrigir_dupla_codificacao(trim($passo)) . "</li>";
                             }
                             ?>
                         </ol>
@@ -107,7 +108,7 @@ if (isset($_GET['cat'])) {
                 </section>
 
             </fieldset>
-        <?php } // Fim do loop while ?>
+        <?php } ?>
 
     </div>
 
