@@ -1,6 +1,15 @@
 <?php
 session_start();
+// Garante o cabeçalho HTTP em UTF-8 antes de qualquer saída
+header('Content-Type: text/html; charset=utf-8');
+
 require_once '../includes/conexao.php';
+
+// Garante que a conexão MySQL utilize UTF-8
+if (isset($conn) && $conn instanceof mysqli) {
+    $conn->set_charset("utf8mb4");
+}
+
 include_once('../includes/header.php');
 
 // Verifica se o usuário está logado
@@ -17,9 +26,9 @@ if ($_SESSION["usuario_status"] !== "liberado") {
 
 // Se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $titulo_bruto = $_POST["titulo"];
-    $ingredientes_bruto = $_POST["ingredientes"];
-    $modo_preparo_bruto = $_POST["modo_preparo"];
+    $titulo_bruto = $_POST["titulo"] ?? '';
+    $ingredientes_bruto = $_POST["ingredientes"] ?? '';
+    $modo_preparo_bruto = $_POST["modo_preparo"] ?? '';
 
     // --- INÍCIO DA LÓGICA DE LIMPEZA E NORMALIZAÇÃO ---
 
@@ -27,32 +36,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ingredientes_normalizado = str_replace(array("\r\n", "\r"), "\n", $ingredientes_bruto);
     $modo_preparo_normalizado = str_replace(array("\r\n", "\r"), "\n", $modo_preparo_bruto);
 
-    // 2. Remover múltiplas quebras de linha consecutivas, deixando apenas uma.
-    // Isso evita múltiplos <li> vazios e espaços excessivos.
+    // 2. Remover múltiplas quebras de linha consecutivas
     $ingredientes_limpo = preg_replace("/\n+/", "\n", $ingredientes_normalizado);
     $modo_preparo_limpo = preg_replace("/\n+/", "\n", $modo_preparo_normalizado);
 
-    // 3. Remover espaços em branco no início e fim de cada linha individualmente.
-    // array_filter(..., 'strlen') remove linhas completamente vazias após o trim.
+    // 3. Limpeza de espaços em branco linha por linha
     $ingredientes_linhas = array_map('trim', explode("\n", $ingredientes_limpo));
-    $ingredientes = implode("\n", array_filter($ingredientes_linhas, 'strlen')); // usa 'strlen' para filtrar strings vazias
+    $ingredientes = implode("\n", array_filter($ingredientes_linhas, 'strlen'));
 
     $modo_preparo_linhas = array_map('trim', explode("\n", $modo_preparo_limpo));
-    $modo_preparo = implode("\n", array_filter($modo_preparo_linhas, 'strlen')); // usa 'strlen' para filtrar strings vazias
+    $modo_preparo = implode("\n", array_filter($modo_preparo_linhas, 'strlen'));
 
-    // 4. Aplicar htmlspecialchars DEPOIS da limpeza para evitar que as quebras de linha sejam convertidas antes de serem salvas.
-    // trim() final para remover qualquer espaço extra na string inteira (após o implode).
-    $titulo = htmlspecialchars(trim($titulo_bruto));
-    $ingredientes = htmlspecialchars($ingredientes); // Já foi trimado linha por linha
-    $modo_preparo = htmlspecialchars($modo_preparo); // Já foi trimado linha por linha
+    // 4. Limpeza final dos textos mantendo os acentos UTF-8
+    $titulo = trim($titulo_bruto);
 
     // --- FIM DA LÓGICA DE LIMPEZA E NORMALIZAÇÃO ---
-
 
     $categoria_id = isset($_POST["categoria_id"]) ? intval($_POST["categoria_id"]) : null;
     $usuario_id = $_SESSION["usuario_id"];
     $imagem_caminho = null;
-
 
     // Upload da imagem
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
@@ -65,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Tipo de arquivo não permitido.");
         }
 
-        $nomeArquivo = uniqid("img_", true) . "." . $extensao;
+        $nomeArquivo = uniqid("img_", true) . "." . strtolower($extensao);
         $caminho = "../uploads/" . $nomeArquivo;
 
         if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
@@ -84,13 +86,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Nenhum arquivo enviado ou erro no upload.");
     }
 
-    // Inserção da receita
+    // Inserção da receita no banco de dados
     $stmt = $conn->prepare("INSERT INTO receitas (titulo, ingredientes, modo_preparo, imagem, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssii", $titulo, $ingredientes, $modo_preparo, $imagem_caminho, $categoria_id, $usuario_id);
 
     if ($stmt->execute()) {
         header("Location: ../index.php?sucesso=1");
-        echo "Receita adicionada com sucesso!"; // Esta linha não será executada devido ao header
         exit();
     } else {
         echo "Erro ao adicionar receita: " . $stmt->error;
@@ -107,14 +108,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Adicionar Receita</title>
-    
 </head>
 
 <body class="pagina-adicionar-receita">
     <h2>Adicionar Receita</h2>
     <form method="post" action="" enctype="multipart/form-data">
         <br>
-        <select name="categoria_id" required>
+        <label for="categoria_id">Categoria:</label>
+        <select name="categoria_id" id="categoria_id" required>
             <option value="">Selecione uma categoria</option>
             <option value="1">Vegetariana</option>
             <option value="2">Vegana</option>
@@ -122,22 +123,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <option value="4">Massa</option>
             <option value="5">Pães</option>
             <option value="6">Bolo</option>
-           <label for="categoria">Categoria:</label>   <option value="7">Doce</option>
+            <option value="7">Doce</option>
         </select><br><br>
-
 
         <div class="container">
             <label for="titulo">Título:</label><br>
-            <input type="text" name="titulo" required><br><br>
+            <input type="text" id="titulo" name="titulo" required><br><br>
 
             <label for="ingredientes">Ingredientes:</label><br>
-            <textarea name="ingredientes" rows="5" required></textarea><br><br>
+            <textarea id="ingredientes" name="ingredientes" rows="5" required></textarea><br><br>
 
             <label for="modo_preparo">Modo de Preparo:</label><br>
-            <textarea name="modo_preparo" rows="6" required></textarea><br><br>
+            <textarea id="modo_preparo" name="modo_preparo" rows="6" required></textarea><br><br>
 
             <label for="imagem">Imagem da Receita (até 5MB):</label><br>
-            <input type="file" name="imagem" accept="image/*" required><br><br>
+            <input type="file" id="imagem" name="imagem" accept="image/*" required><br><br>
 
             <button type="submit">Salvar Receita</button>
         </div>
