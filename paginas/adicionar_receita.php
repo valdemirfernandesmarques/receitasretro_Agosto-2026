@@ -1,6 +1,16 @@
 <?php
 session_start();
+
+// Força o cabeçalho HTTP em UTF-8 no Render
+header('Content-Type: text/html; charset=utf-8');
+
 require_once '../includes/conexao.php';
+
+// Força a conexão MySQL a usar UTF-8
+if (isset($conn)) {
+    $conn->set_charset("utf8mb4");
+}
+
 include_once('../includes/header.php');
 
 // Verifica se o usuário está logado
@@ -17,9 +27,10 @@ if ($_SESSION["usuario_status"] !== "liberado") {
 
 // Se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $titulo_bruto = $_POST["titulo"];
-    $ingredientes_bruto = $_POST["ingredientes"];
-    $modo_preparo_bruto = $_POST["modo_preparo"];
+    // Captura e força UTF-8 nas entradas brutas do formulário
+    $titulo_bruto = mb_convert_encoding($_POST["titulo"], 'UTF-8', 'UTF-8');
+    $ingredientes_bruto = mb_convert_encoding($_POST["ingredientes"], 'UTF-8', 'UTF-8');
+    $modo_preparo_bruto = mb_convert_encoding($_POST["modo_preparo"], 'UTF-8', 'UTF-8');
 
     // --- INÍCIO DA LÓGICA DE LIMPEZA E NORMALIZAÇÃO ---
     $ingredientes_normalizado = str_replace(array("\r\n", "\r"), "\n", $ingredientes_bruto);
@@ -34,9 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modo_preparo_linhas = array_map('trim', explode("\n", $modo_preparo_limpo));
     $modo_preparo = implode("\n", array_filter($modo_preparo_linhas, 'strlen'));
 
-    $titulo = htmlspecialchars(trim($titulo_bruto));
-    $ingredientes = htmlspecialchars($ingredientes);
-    $modo_preparo = htmlspecialchars($modo_preparo);
+    $titulo = trim($titulo_bruto);
     // --- FIM DA LÓGICA DE LIMPEZA E NORMALIZAÇÃO ---
 
     $categoria_id = isset($_POST["categoria_id"]) ? intval($_POST["categoria_id"]) : null;
@@ -56,7 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tmpFilePath = $_FILES['imagem']['tmp_name'];
 
         // --- CONFIGURAÇÃO DO CLOUDINARY ---
-        // Preencha com as suas credenciais do Cloudinary:
         $cloudName = 'SEU_CLOUD_NAME';
         $apiKey    = 'SUA_API_KEY';
         $apiSecret = 'SEU_API_SECRET';
@@ -86,10 +94,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $data = json_decode($response, true);
 
         if (!$err && isset($data['secure_url'])) {
-            // Upload no Cloudinary realizado com sucesso -> URL permanente
             $imagem_caminho = $data['secure_url'];
         } else {
-            // Fallback para pasta local se o Cloudinary não estiver configurado/responder
             if (!is_dir("../uploads")) {
                 mkdir("../uploads", 0755, true);
             }
