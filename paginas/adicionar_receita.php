@@ -19,7 +19,7 @@ if (isset($_SESSION["usuario_status"]) && $_SESSION["usuario_status"] !== "liber
     exit();
 }
 
-// Função profunda para sanitizar textos copiados da web
+// Função para tratar quebras de linha e sujeiras de texto sem alterar os acentos
 function limpar_entrada_texto($texto) {
     if (empty($texto)) return '';
     
@@ -35,8 +35,6 @@ function limpar_entrada_texto($texto) {
     
     foreach ($linhas as $linha) {
         $l = trim($linha);
-        // Remove símbolos estranhos do início das linhas se houver
-        $l = preg_replace('/^[^a-zA-Z0-9áàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ\(\)\.,\-\s\/]+/u', '', $l);
         if (!empty($l)) {
             $linhas_limpas[] = $l;
         }
@@ -46,16 +44,16 @@ function limpar_entrada_texto($texto) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $titulo_bruto = $_POST["titulo"];
-    $ingredientes_bruto = $_POST["ingredientes"];
-    $modo_preparo_bruto = $_POST["modo_preparo"];
-    $descricao_bruta = isset($_POST["descricao"]) ? $_POST["descricao"] : $titulo_bruto;
+    $titulo_bruto = $_POST["titulo"] ?? '';
+    $ingredientes_bruto = $_POST["ingredientes"] ?? '';
+    $modo_preparo_bruto = $_POST["modo_preparo"] ?? '';
+    $descricao_bruta = isset($_POST["descricao"]) && !empty($_POST["descricao"]) ? $_POST["descricao"] : $titulo_bruto;
 
-    // Aplica a faxina nos textos
-    $titulo = htmlspecialchars(trim($titulo_bruto), ENT_QUOTES, 'UTF-8');
-    $descricao = htmlspecialchars(trim($descricao_bruta), ENT_QUOTES, 'UTF-8');
-    $ingredientes = htmlspecialchars(limpar_entrada_texto($ingredientes_bruto), ENT_QUOTES, 'UTF-8');
-    $modo_preparo = htmlspecialchars(limpar_entrada_texto($modo_preparo_bruto), ENT_QUOTES, 'UTF-8');
+    // Salva os textos em UTF-8 puro e limpo (sem htmlspecialchars no banco)
+    $titulo = trim($titulo_bruto);
+    $descricao = trim($descricao_bruta);
+    $ingredientes = limpar_entrada_texto($ingredientes_bruto);
+    $modo_preparo = limpar_entrada_texto($modo_preparo_bruto);
 
     $categoria_id = isset($_POST["categoria_id"]) ? intval($_POST["categoria_id"]) : null;
     $usuario_id = $_SESSION["usuario_id"];
@@ -71,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             die("Tipo de arquivo não permitido.");
         }
 
-        $nomeArquivo = uniqid("img_", true) . "." . $extensao;
+        $nomeArquivo = uniqid("img_", true) . "." . strtolower($extensao);
         $caminho = "../uploads/" . $nomeArquivo;
 
         if (!is_dir("../uploads")) {

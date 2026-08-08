@@ -1,22 +1,30 @@
 <?php
 session_start();
-// Garante o cabeçalho HTTP em UTF-8
+
 header('Content-Type: text/html; charset=utf-8');
 
 include_once '../includes/conexao.php';
 
-// Garante que a conexão MySQL utilize UTF-8
 if (isset($conn) && $conn instanceof mysqli) {
     $conn->set_charset("utf8mb4");
 }
 
+/**
+ * Converte e limpa qualquer texto prevenindo dupla codificação
+ */
+function exibir_texto_utf8($texto) {
+    if (empty($texto)) return '';
+    // Decodifica entidades anteriores (caso o banco tenha registros com &atilde;, &ccedil;)
+    $decodificado = html_entity_decode($texto, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    // Aplica a sanitização final em UTF-8 nativo
+    return htmlspecialchars($decodificado, ENT_QUOTES, 'UTF-8');
+}
+
 include_once '../includes/header.php';
 
-// --- Lógica para buscar e exibir receitas por categoria ---
 if (isset($_GET['cat'])) {
     $categoria = $_GET['cat'];
 
-    // Prepara a consulta para buscar a categoria
     $stmtCategoria = $conn->prepare("SELECT id FROM categorias WHERE nome = ?");
     $stmtCategoria->bind_param("s", $categoria);
     $stmtCategoria->execute();
@@ -26,7 +34,6 @@ if (isset($_GET['cat'])) {
         $categoriaRow = $resultCategoria->fetch_assoc();
         $categoriaId = $categoriaRow['id'];
 
-        // Consulta receitas liberadas
         $stmtReceitas = $conn->prepare("SELECT r.*, u.nome AS autor_nome 
                                          FROM receitas r 
                                          JOIN usuarios u ON r.usuario_id = u.id 
@@ -48,7 +55,7 @@ if (isset($_GET['cat'])) {
 <body>
 <main class="container pagina-categoria">
     
-    <h2 class="titulo-categoria">Receitas: <?php echo htmlspecialchars(ucfirst($categoria), ENT_QUOTES, 'UTF-8'); ?></h2>
+    <h2 class="titulo-categoria">Receitas: <?php echo exibir_texto_utf8(ucfirst($categoria)); ?></h2>
 
     <div class="grid-receitas">
 
@@ -57,16 +64,16 @@ if (isset($_GET['cat'])) {
         ?>
             <fieldset class="card-receita">
                 <legend class="receita-titulo">
-                    <?php echo htmlspecialchars($receita['titulo'], ENT_QUOTES, 'UTF-8'); ?>
+                    <?php echo exibir_texto_utf8($receita['titulo']); ?>
                 </legend>
                 
                 <p class="autor-receita">
-                    Escrito por: <strong><?php echo htmlspecialchars($receita['autor_nome'], ENT_QUOTES, 'UTF-8'); ?></strong><br>
+                    Escrito por: <strong><?php echo exibir_texto_utf8($receita['autor_nome']); ?></strong><br>
                     Publicado em: <strong><?php echo date('d/m/Y \à\s H:i', strtotime($receita['criado_em'])); ?></strong>
                 </p>
 
-                <img src="<?php echo htmlspecialchars($receita['imagem'], ENT_QUOTES, 'UTF-8'); ?>" 
-                     alt="Imagem da receita <?php echo htmlspecialchars($receita['titulo'], ENT_QUOTES, 'UTF-8'); ?>">
+                <img src="<?php echo exibir_texto_utf8($receita['imagem']); ?>" 
+                     alt="Imagem da receita <?php echo exibir_texto_utf8($receita['titulo']); ?>">
 
                 <section class="receita-conteudo">
                     
@@ -78,7 +85,7 @@ if (isset($_GET['cat'])) {
                             foreach ($ingredientes as $item) {
                                 $item_limpo = trim($item);
                                 if (!empty($item_limpo)) {
-                                    echo "<li>" . htmlspecialchars($item_limpo, ENT_QUOTES, 'UTF-8') . "</li>";
+                                    echo "<li>" . exibir_texto_utf8($item_limpo) . "</li>";
                                 }
                             }
                             ?>
@@ -93,7 +100,7 @@ if (isset($_GET['cat'])) {
                             foreach ($preparo as $passo) {
                                 $passo_limpo = trim($passo);
                                 if (!empty($passo_limpo)) {
-                                    echo "<li>" . htmlspecialchars($passo_limpo, ENT_QUOTES, 'UTF-8') . "</li>";
+                                    echo "<li>" . exibir_texto_utf8($passo_limpo) . "</li>";
                                 }
                             }
                             ?>
@@ -102,7 +109,7 @@ if (isset($_GET['cat'])) {
                 </section>
 
             </fieldset>
-        <?php } // Fim do loop while ?>
+        <?php } ?>
 
     </div>
 </main>
@@ -110,3 +117,4 @@ if (isset($_GET['cat'])) {
 </body>
 <?php
 include_once('../includes/footer.php');
+?>
