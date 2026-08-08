@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once '../includes/conexao.php';
+require_once '../includes/upload_cloudinary.php'; // Inclui a integração com Cloudinary
 
 // Configura o charset do banco para UTF-8
 if (isset($conn) && $conn instanceof mysqli) {
@@ -27,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $titulo_bruto = $_POST["titulo"];
     $ingredientes_bruto = $_POST["ingredientes"];
     $modo_preparo_bruto = $_POST["modo_preparo"];
-    $descricao_bruta = isset($_POST["descricao"]) ? $_POST["descricao"] : $titulo_bruto; // Usado para preencher a coluna obrigatória
+    $descricao_bruta = isset($_POST["descricao"]) ? $_POST["descricao"] : $titulo_bruto;
 
     // --- LIMPEZA E NORMALIZAÇÃO ---
     $ingredientes_normalizado = str_replace(array("\r\n", "\r"), "\n", $ingredientes_bruto);
@@ -51,42 +52,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usuario_id = $_SESSION["usuario_id"];
     $imagem_caminho = null;
 
-    // Upload da imagem
+    // Upload da imagem usando Cloudinary
     if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
         $nomeOriginal = basename($_FILES['imagem']['name']);
         $tipo = $_FILES['imagem']['type'];
-        $extensao = pathinfo($nomeOriginal, PATHINFO_EXTENSION);
+        $extensao = strtolower(pathinfo($nomeOriginal, PATHINFO_EXTENSION));
 
         $tiposPermitidos = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        if (!in_array(strtolower($extensao), $tiposPermitidos)) {
+        if (!in_array($extensao, $tiposPermitidos)) {
             die("Tipo de arquivo não permitido.");
         }
 
-        $nomeArquivo = uniqid("img_", true) . "." . $extensao;
-        $caminho = "../uploads/" . $nomeArquivo;
+        // Faz o upload para a nuvem (Cloudinary) e obtém a URL segura (https://...)
+        $url_cloudinary = upload_para_cloudinary($_FILES['imagem']['tmp_name']);
 
-        // Cria o diretório de uploads caso não exista
-        if (!is_dir("../uploads")) {
-            mkdir("../uploads", 0755, true);
-        }
+        if ($url_cloudinary) {
+            $imagem_caminho = $url_cloudinary;
 
-        if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
+            // Opcional: Salva no registro da tabela de imagens
             $stmt_img = $conn->prepare("INSERT INTO imagens (nome, tipo, caminho) VALUES (?, ?, ?)");
-            $stmt_img->bind_param("sss", $nomeOriginal, $tipo, $caminho);
-            if ($stmt_img->execute()) {
-                $imagem_caminho = $caminho;
-            } else {
-                die("Erro ao salvar imagem no banco de dados: " . $stmt_img->error);
-            }
+            $stmt_img->bind_param("sss", $nomeOriginal, $tipo, $imagem_caminho);
+            $stmt_img->execute();
             $stmt_img->close();
         } else {
-            die("Erro ao mover o arquivo de imagem.");
+            die("Erro ao realizar o upload da imagem para a nuvem.");
         }
     } else {
         die("Nenhum arquivo enviado ou erro no upload.");
     }
 
-    // Inserção da receita incluindo a coluna 'descricao'
+    // Inserção da receita no banco salvando a URL permanente da imagem
     $stmt = $conn->prepare("INSERT INTO receitas (titulo, descricao, ingredientes, modo_preparo, imagem, categoria_id, usuario_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("sssssii", $titulo, $descricao, $ingredientes, $modo_preparo, $imagem_caminho, $categoria_id, $usuario_id);
 
@@ -128,7 +123,7 @@ include_once('../includes/header.php');
             <input type="text" name="descricao" id="descricao" placeholder="Uma breve descrição da receita..." required><br><br>
 
             <label for="ingredientes">Ingredientes:</label><br>
-            <textarea name="ingredientes" id="ingredientes" rows="5" required></textarea><br><br>
+            <input name="ingredientes" id="ingredientes" rows="5" required></input><br><br>
 
             <label for="modo_preparo">Modo de Preparo:</label><br>
             <textarea name="modo_preparo" id="modo_preparo" rows="6" required></textarea><br><br>
